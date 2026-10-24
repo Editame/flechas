@@ -1,0 +1,294 @@
+[gd_scene load_steps=4 format=3 uid="uid://bflechasjuego01"]
+
+[ext_resource type="Script" path="res://src/game/juego.gd" id="1"]
+
+[sub_resource type="StyleBoxFlat" id="icon_btn"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+shadow_color = Color(0.4, 0.3, 0.2, 0.16)
+shadow_size = 6
+shadow_offset = Vector2(0, 2)
+
+[sub_resource type="StyleBoxFlat" id="modal_bg"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 28
+corner_radius_top_right = 28
+corner_radius_bottom_right = 28
+corner_radius_bottom_left = 28
+shadow_color = Color(0.2, 0.18, 0.3, 0.25)
+shadow_size = 24
+content_margin_left = 28.0
+content_margin_top = 28.0
+content_margin_right = 28.0
+content_margin_bottom = 28.0
+
+[node name="Juego" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 24.0
+offset_right = -18.0
+offset_bottom = 84.0
+theme_override_constants/separation = 10
+
+[node name="Atras" type="Button" parent="Header"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+theme_override_font_sizes/font_size = 30
+text = "‹"
+
+[node name="Titulo" type="Label" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Nivel 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 30
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+
+[node name="Deshacer" type="Button" parent="Header"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+theme_override_font_sizes/font_size = 26
+text = "↶"
+
+[node name="Ajustes" type="Button" parent="Header"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+theme_override_font_sizes/font_size = 26
+text = "⚙"
+
+[node name="Dificultad" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 90.0
+offset_bottom = 122.0
+text = ""
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.48, 0.55, 0.57, 1)
+
+[node name="OtroNivel" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -196.0
+offset_top = -84.0
+offset_right = -16.0
+offset_bottom = -20.0
+theme_override_font_sizes/font_size = 20
+text = "Otro nivel"
+
+[node name="Debug" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = -196.0
+offset_right = 250.0
+offset_bottom = -92.0
+text = ""
+horizontal_alignment = 0
+vertical_alignment = 2
+theme_override_font_sizes/font_size = 11
+theme_override_colors/font_color = Color(0.42, 0.47, 0.52, 1)
+
+[node name="Estado" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 126.0
+offset_bottom = 160.0
+text = ""
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.078, 0.110, 0.227, 1)
+
+[node name="Modal" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Fondo" type="ColorRect" parent="Modal"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.15, 0.14, 0.22, 0.5)
+
+[node name="Panel" type="PanelContainer" parent="Modal"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -280.0
+offset_right = 300.0
+offset_bottom = 280.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("modal_bg")
+
+[node name="VBox" type="VBoxContainer" parent="Modal/Panel"]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="Titulo" type="Label" parent="Modal/Panel/VBox"]
+layout_mode = 2
+text = "Opciones"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 40
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+
+[node name="FSonido" type="HBoxContainer" parent="Modal/Panel/VBox"]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="Modal/Panel/VBox/FSonido"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Sonido"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+
+[node name="Chk" type="CheckButton" parent="Modal/Panel/VBox/FSonido"]
+layout_mode = 2
+
+[node name="FVibracion" type="HBoxContainer" parent="Modal/Panel/VBox"]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="Modal/Panel/VBox/FVibracion"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Vibración"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+
+[node name="Chk" type="CheckButton" parent="Modal/Panel/VBox/FVibracion"]
+layout_mode = 2
+
+[node name="FEfectos" type="HBoxContainer" parent="Modal/Panel/VBox"]
+layout_mode = 2
+
+[node name="Lbl" type="Label" parent="Modal/Panel/VBox/FEfectos"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Efectos"
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.20, 0.28, 0.30, 1)
+
+[node name="Chk" type="CheckButton" parent="Modal/Panel/VBox/FEfectos"]
+layout_mode = 2
+
+[node name="Reiniciar" type="Button" parent="Modal/Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+text = "Reiniciar"
+
+[node name="Cerrar" type="Button" parent="Modal/Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 60)
+text = "Cerrar"
+
+
+
+[node name="Victoria" type="Control" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="Fondo" type="ColorRect" parent="Victoria"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.078, 0.110, 0.227, 0.4)
+
+[node name="VBox" type="VBoxContainer" parent="Victoria"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -260.0
+offset_top = -200.0
+offset_right = 260.0
+offset_bottom = 200.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 24
+
+[node name="Mensaje" type="Label" parent="Victoria/VBox"]
+layout_mode = 2
+text = "¡Buen trabajo!"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 56
+theme_override_colors/font_color = Color(0.99, 0.99, 1, 1)
+
+[node name="Sub" type="Label" parent="Victoria/VBox"]
+layout_mode = 2
+text = "Nivel completado"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 28
+theme_override_colors/font_color = Color(0.99, 0.99, 1, 1)
+
+[node name="Estrellas" type="Label" parent="Victoria/VBox"]
+layout_mode = 2
+text = "★★★"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 60
+theme_override_colors/font_color = Color(1, 0.85, 0.3, 1)
+
+[node name="Stats" type="Label" parent="Victoria/VBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 24
+theme_override_colors/font_color = Color(0.99, 0.99, 1, 1)
+
+[node name="Siguiente" type="Button" parent="Victoria/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 68)
+text = "Siguiente nivel"
+
+[node name="Inicio" type="Button" parent="Victoria/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 68)
+text = "Inicio"
+
+

@@ -1,0 +1,47 @@
+﻿; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=5
+
+[application]
+
+config/name="Flechas"
+config/description="Puzzle relajante: despeja el tablero sacando flechas en el orden correcto."
+run/main_scene="res://src/ui/main_menu.tscn"
+config/features=PackedStringArray("4.7")
+config/icon="res://icon.svg"
+
+[autoload]
+
+Sesion="*res://src/game/sesion.gd"
+Config="*res://src/game/config.gd"
+Audio="*res://src/game/audio.gd"
+Progreso="*res://src/game/progreso.gd"
+
+[display]
+
+window/size/viewport_width=720
+window/size/viewport_height=1280
+window/stretch/mode="canvas_items"
+window/handheld/orientation=1
+
+[gui]
+
+theme/custom="res://src/ui/tema_ui.tres"
+
+[rendering]
+textures/vram_compression/import_etc2_astc=true
+
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+environment/defaults/default_clear_color=Color(0.94, 0.95, 0.96, 1)
+
+
+
+
+

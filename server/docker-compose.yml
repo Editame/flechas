@@ -1,0 +1,7 @@
+services:
+  generador-flechas:
+    build: .
+    container_name: generador-flechas
+    ports:
+      - "8080:8080"   # host:contenedor — cambia el puerto host si lo necesitas
+    restart: unless-stopped

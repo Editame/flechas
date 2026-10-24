@@ -1,0 +1,26 @@
+# Godot engine
+.godot/
+*.import
+*.uid
+*.translation
+
+# Build exports
+build/
+*.apk
+*.aab
+*.exe
+*.dll
+*.pdb
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log

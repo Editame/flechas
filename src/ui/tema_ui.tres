@@ -1,0 +1,69 @@
+[gd_resource type="Theme" load_steps=8 format=3 uid="uid://bflechastheme01"]
+
+[ext_resource type="FontFile" path="res://assets/fonts/Poppins-Medium.ttf" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/Poppins-SemiBold.ttf" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="btn_normal"]
+bg_color = Color(0.078, 0.110, 0.227, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+shadow_color = Color(0.078, 0.110, 0.227, 0.30)
+shadow_size = 10
+shadow_offset = Vector2(0, 4)
+content_margin_left = 22.0
+content_margin_top = 15.0
+content_margin_right = 22.0
+content_margin_bottom = 15.0
+
+[sub_resource type="StyleBoxFlat" id="btn_hover"]
+bg_color = Color(0.14, 0.18, 0.34, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+content_margin_left = 22.0
+content_margin_top = 15.0
+content_margin_right = 22.0
+content_margin_bottom = 15.0
+
+[sub_resource type="StyleBoxFlat" id="btn_pressed"]
+bg_color = Color(0.05, 0.08, 0.18, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+content_margin_left = 22.0
+content_margin_top = 15.0
+content_margin_right = 22.0
+content_margin_bottom = 15.0
+
+[sub_resource type="StyleBoxFlat" id="panel_soft"]
+bg_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 32
+corner_radius_top_right = 32
+corner_radius_bottom_right = 32
+corner_radius_bottom_left = 32
+shadow_color = Color(0.4, 0.3, 0.2, 0.18)
+shadow_size = 20
+content_margin_left = 26.0
+content_margin_top = 26.0
+content_margin_right = 26.0
+content_margin_bottom = 26.0
+
+[resource]
+default_font = ExtResource("1")
+default_font_size = 30
+Button/colors/font_color = Color(1, 0.99, 0.96, 1)
+Button/colors/font_hover_color = Color(1, 1, 1, 1)
+Button/colors/font_pressed_color = Color(0.95, 0.9, 0.82, 1)
+Button/fonts/font = ExtResource("2")
+Button/font_sizes/font_size = 32
+Button/styles/normal = SubResource("btn_normal")
+Button/styles/hover = SubResource("btn_hover")
+Button/styles/pressed = SubResource("btn_pressed")
+Button/styles/focus = SubResource("btn_normal")
+PanelContainer/styles/panel = SubResource("panel_soft")
+
+
