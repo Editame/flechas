@@ -1,6 +1,7 @@
-[gd_scene load_steps=4 format=3 uid="uid://bflechasjuego01"]
+[gd_scene load_steps=5 format=3 uid="uid://bflechasjuego01"]
 
 [ext_resource type="Script" path="res://src/game/juego.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/iconos/ver_web.svg" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="icon_btn"]
 bg_color = Color(0.075, 0.102, 0.18, 1)
@@ -72,6 +73,15 @@ theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 theme_override_font_sizes/font_size = 26
 text = "↶"
 
+[node name="VerWeb" type="Button" parent="Header"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+tooltip_text = "Ver en web"
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+icon = ExtResource("2")
+
 [node name="Ajustes" type="Button" parent="Header"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
@@ -92,62 +102,6 @@ text = ""
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
-
-[node name="OtroNivel" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 3
-anchor_left = 1.0
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_left = -196.0
-offset_top = -84.0
-offset_right = -16.0
-offset_bottom = -20.0
-theme_override_font_sizes/font_size = 20
-text = "Otro nivel"
-
-[node name="Debug" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 10.0
-offset_top = -196.0
-offset_right = 250.0
-offset_bottom = -92.0
-text = ""
-horizontal_alignment = 0
-vertical_alignment = 2
-theme_override_font_sizes/font_size = 11
-theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
-
-[node name="PanelSemilla" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 12.0
-offset_top = -318.0
-offset_right = 706.0
-offset_bottom = -246.0
-
-[node name="Fila" type="HBoxContainer" parent="PanelSemilla"]
-layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="Semilla" type="Label" parent="PanelSemilla/Fila"]
-layout_mode = 2
-size_flags_horizontal = 3
-text = "semilla"
-vertical_alignment = 1
-theme_override_font_sizes/font_size = 34
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
-
-[node name="VerWeb" type="Button" parent="PanelSemilla/Fila"]
-layout_mode = 2
-text = "Ver en web"
-theme_override_font_sizes/font_size = 22
 
 [node name="Estado" type="Label" parent="."]
 layout_mode = 1

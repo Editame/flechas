@@ -66,9 +66,7 @@ func _ready() -> void:
 	$Header/Atras.pressed.connect(_ir_menu)
 	$Header/Deshacer.pressed.connect(deshacer)
 	$Header/Ajustes.pressed.connect(_abrir_modal)
-	# Botón de prueba: siempre genera un nivel difícil/súper difícil NUEVO.
-	if has_node("OtroNivel"):
-		$OtroNivel.pressed.connect(otro_nivel)
+	$Header/VerWeb.pressed.connect(_abrir_en_web)
 	# Modal de opciones.
 	$Modal/Panel/VBox/Cerrar.pressed.connect(_cerrar_modal)
 	$Modal/Panel/VBox/Reiniciar.pressed.connect(func():
@@ -85,8 +83,6 @@ func _ready() -> void:
 	# Overlay de victoria.
 	$Victoria/VBox/Siguiente.pressed.connect(_siguiente_nivel)
 	$Victoria/VBox/Inicio.pressed.connect(_ir_menu)
-	if has_node("PanelSemilla/Fila/VerWeb"):
-		$PanelSemilla/Fila/VerWeb.pressed.connect(_abrir_en_web)
 	resized.connect(queue_redraw)
 	if has_node("/root/Config"):
 		get_node("/root/Config").cambiado.connect(_refrescar_tema)
@@ -118,18 +114,13 @@ func _abrir_en_web() -> void:
 func _refrescar_tema() -> void:
 	var t := Config.tema
 	Tema.aplicar(t)
-	for ruta in ["Header/Atras", "Header/Deshacer", "Header/Ajustes",
-			"PanelSemilla/Fila/VerWeb"]:
+	for ruta in ["Header/Atras", "Header/Deshacer", "Header/VerWeb", "Header/Ajustes"]:
 		if has_node(ruta):
 			Tema.estilizar_secundario(get_node(ruta), t)
 	if has_node("Modal/Panel"):
 		$Modal/Panel.add_theme_stylebox_override("panel", Tema.caja_panel(t))
 	if has_node("Dificultad"):
 		$Dificultad.add_theme_color_override("font_color", Tema.texto_suave(t))
-	if has_node("PanelSemilla/Fila/Semilla"):
-		$PanelSemilla/Fila/Semilla.add_theme_color_override("font_color", Tema.texto(t))
-	if has_node("Debug"):
-		$Debug.add_theme_color_override("font_color", Tema.texto_suave(t))
 	if has_node("Estado"):
 		$Estado.add_theme_color_override("font_color", Tema.texto(t))
 	if has_node("Victoria/VBox/Mensaje"):
@@ -194,40 +185,6 @@ func dificultad_para(numero: int) -> String:
 		"maximo", "maximo",
 	]
 	return bolsa[randi() % bolsa.size()]
-
-func _actualizar_debug() -> void:
-	if not has_node("Debug") or tablero == null:
-		return
-	var semilla := 0
-	if has_node("/root/Sesion"):
-		semilla = get_node("/root/Sesion").semilla_nivel
-	var cadena := Metricas.cadena_mas_larga(tablero)
-	var libres := Metricas.libres_iniciales(tablero)
-	var nf := tablero.cantidad_flechas()
-	var prof := GrafoDependencias.profundidad(tablero)
-	var ratio := GrafoDependencias.ratio_bloqueo(tablero) * 100.0
-	var sol_ok := true
-	if has_node("/root/Sesion"):
-		var sol: Array = get_node("/root/Sesion").solucion_nivel
-		if not sol.is_empty():
-			sol_ok = Metricas.verificar_solucion(tablero, sol)
-	if has_node("PanelSemilla/Fila/Semilla"):
-		$PanelSemilla/Fila/Semilla.text = "semilla %d" % semilla
-	$Debug.text = "\n".join([
-		Version.etiqueta(),
-		"Nv %d  semilla %d" % [numero_nivel, semilla],
-		"celdas %d  flechas %d" % [tablero.jugables.size(), nf],
-		"CADENA %d   prof %d" % [cadena, prof],
-		"libres@0 %d (%d%%)  bloq %d%%" % [libres, int(round(100.0 * libres / maxf(1.0, float(nf)))), int(ratio)],
-		"solucion valida: %s" % ("si" if sol_ok else "NO"),
-	])
-
-func _unhandled_input(event: InputEvent) -> void:
-	# Tecla D (móvil: 3 dedos? no hay; en PC sirve para auditar).
-	if event is InputEventKey and event.pressed and not event.echo:
-		var k := (event as InputEventKey).keycode
-		if k == KEY_D and has_node("Debug"):
-			$Debug.visible = not $Debug.visible
 
 func _draw() -> void:
 	if tablero == null:
@@ -652,9 +609,6 @@ func _siguiente_nivel() -> void:
 	$Victoria.visible = false
 	cargar_nivel(numero_nivel + 1)
 
-func otro_nivel() -> void:
-	cargar_nivel(numero_nivel + 1)
-
 func _tomar_precargado() -> Generador.Nivel:
 	if not _hilo_vivo:
 		return _precargado
@@ -714,7 +668,6 @@ func _cargar_nivel_desde_api(data: Dictionary) -> void:
 	if _label_estado:
 		_label_estado.text = ""
 	print("[juego] nivel ", numero_nivel, " ", tablero.filas, "x", tablero.columnas, " flechas=", tablero.cantidad_flechas(), " dificultad=", str(data.get("dificultad", "?")))
-	_actualizar_debug()
 	queue_redraw()
 
 func _on_error_api(mensaje: String) -> void:
@@ -749,7 +702,6 @@ func cargar_tablero(nivel: Generador.Nivel) -> void:
 		_label_titulo.text = "Prueba %d" % numero_nivel
 	if has_node("Dificultad") and tablero != null:
 		$Dificultad.text = I18n.t(Generador.dificultad(tablero))
-	_actualizar_debug()
 	if _label_estado:
 		_label_estado.text = ""
 	queue_redraw()
@@ -778,10 +730,6 @@ func _calcular_geometria() -> void:
 	var margen := 24.0
 	var reserva_arriba := 170.0   # header + dificultad + estado
 	var reserva_abajo := 30.0
-	# Si el panel de semilla está visible (modo desarrollo), le reservamos su
-	# franja para que no tape las últimas filas del tablero.
-	if has_node("PanelSemilla") and $PanelSemilla.visible:
-		reserva_abajo = 340.0
 	var ancho_disp: float = area.x - margen * 2.0
 	var alto_disp: float = area.y - reserva_arriba - reserva_abajo
 	# Celda BASE (zoom 1): encaja TODO el tablero (vista general inicial).
