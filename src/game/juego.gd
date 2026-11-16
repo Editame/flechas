@@ -74,7 +74,7 @@ func _ready() -> void:
 	$Header/Deshacer.pressed.connect(deshacer)
 	$Header/Ajustes.pressed.connect(_abrir_modal)
 	$Header/VerWeb.pressed.connect(_abrir_en_web)
-	$Pista.pressed.connect(_dar_pista)
+	$Header/Pista.pressed.connect(_dar_pista)
 	# Modal de opciones.
 	$Modal/Panel/VBox/Cerrar.pressed.connect(_cerrar_modal)
 	$Modal/Panel/VBox/Reiniciar.pressed.connect(func():
@@ -125,7 +125,7 @@ func _abrir_en_web() -> void:
 func _refrescar_tema() -> void:
 	var t := Config.tema
 	Tema.aplicar(t)
-	for ruta in ["Header/Atras", "Header/Deshacer", "Header/VerWeb", "Header/Ajustes", "Pista"]:
+	for ruta in ["Header/Atras", "Header/Deshacer", "Header/Pista", "Header/VerWeb", "Header/Ajustes"]:
 		if has_node(ruta):
 			Tema.estilizar_secundario(get_node(ruta), t)
 	if has_node("Modal/Panel"):

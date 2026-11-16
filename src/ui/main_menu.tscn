@@ -69,10 +69,18 @@ text = ""
 theme_override_font_sizes/font_size = 19
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
 
-[node name="Diario" type="Button" parent="Contenido"]
-custom_minimum_size = Vector2(0, 240)
+[node name="ModosCentro" type="CenterContainer" parent="Contenido"]
+custom_minimum_size = Vector2(0, 250)
 layout_mode = 2
-size_flags_horizontal = 3
+
+[node name="Modos" type="HBoxContainer" parent="Contenido/ModosCentro"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="Diario" type="Button" parent="Contenido/ModosCentro/Modos"]
+custom_minimum_size = Vector2(340, 250)
+layout_mode = 2
 text = ""
 
 [node name="Espacio1" type="Control" parent="Contenido"]

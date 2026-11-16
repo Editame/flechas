@@ -74,6 +74,15 @@ theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 theme_override_font_sizes/font_size = 26
 text = "↶"
 
+[node name="Pista" type="Button" parent="Header"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+tooltip_text = "Pista"
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+icon = ExtResource("3")
+
 [node name="VerWeb" type="Button" parent="Header"]
 custom_minimum_size = Vector2(60, 60)
 layout_mode = 2
@@ -92,19 +101,6 @@ theme_override_styles/pressed = SubResource("icon_btn")
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 theme_override_font_sizes/font_size = 26
 text = "⚙"
-
-[node name="Pista" type="Button" parent="."]
-layout_mode = 1
-anchors_preset = 2
-anchor_top = 1.0
-anchor_bottom = 1.0
-offset_left = 18.0
-offset_top = -92.0
-offset_right = 178.0
-offset_bottom = -28.0
-icon = ExtResource("3")
-text = "Pista"
-theme_override_font_sizes/font_size = 20
 
 [node name="Dificultad" type="Label" parent="."]
 layout_mode = 1

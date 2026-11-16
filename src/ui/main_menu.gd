@@ -14,7 +14,7 @@ const DIARIO_SUAVE := Color("#c9b8e8")
 func _ready() -> void:
 	$Contenido/Header/Ajustes.pressed.connect(_abrir_ajustes)
 	$Contenido/Jugar.pressed.connect(_jugar)
-	$Contenido/Diario.pressed.connect(_abrir_diario)
+	$Contenido/ModosCentro/Modos/Diario.pressed.connect(_abrir_diario)
 	_construir_diario()
 	_construir_stats()
 	if has_node("/root/Config"):
@@ -56,13 +56,13 @@ func _estilar_diario() -> void:
 	hover.bg_color = DIARIO_FONDO_2
 	var pressed := normal.duplicate() as StyleBoxFlat
 	pressed.bg_color = DIARIO_FONDO.darkened(0.1)
-	$Contenido/Diario.add_theme_stylebox_override("normal", normal)
-	$Contenido/Diario.add_theme_stylebox_override("hover", hover)
-	$Contenido/Diario.add_theme_stylebox_override("pressed", pressed)
-	$Contenido/Diario.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	$Contenido/ModosCentro/Modos/Diario.add_theme_stylebox_override("normal", normal)
+	$Contenido/ModosCentro/Modos/Diario.add_theme_stylebox_override("hover", hover)
+	$Contenido/ModosCentro/Modos/Diario.add_theme_stylebox_override("pressed", pressed)
+	$Contenido/ModosCentro/Modos/Diario.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
 
 func _construir_diario() -> void:
-	if $Contenido/Diario.get_child_count() > 0:
+	if $Contenido/ModosCentro/Modos/Diario.get_child_count() > 0:
 		return
 	var deco := Label.new()
 	deco.name = "Deco"
@@ -72,17 +72,17 @@ func _construir_diario() -> void:
 	deco.offset_right = -18.0
 	deco.horizontal_alignment = HORIZONTAL_ALIGNMENT_RIGHT
 	deco.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	deco.add_theme_font_size_override("font_size", 150)
+	deco.add_theme_font_size_override("font_size", 120)
 	deco.add_theme_color_override("font_color", Color(1.0, 0.72, 0.01, 0.12))
-	$Contenido/Diario.add_child(deco)
+	$Contenido/ModosCentro/Modos/Diario.add_child(deco)
 
 	var margen := MarginContainer.new()
 	margen.name = "Margen"
 	margen.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	margen.set_anchors_preset(Control.PRESET_FULL_RECT)
 	for lado in ["left", "top", "right", "bottom"]:
-		margen.add_theme_constant_override("margin_" + lado, 22)
-	$Contenido/Diario.add_child(margen)
+		margen.add_theme_constant_override("margin_" + lado, 20)
+	$Contenido/ModosCentro/Modos/Diario.add_child(margen)
 
 	var v := VBoxContainer.new()
 	v.name = "VBox"
@@ -115,7 +115,7 @@ func _construir_diario() -> void:
 	var dia := Label.new()
 	dia.name = "Dia"
 	dia.text = "16 NOV"
-	dia.add_theme_font_size_override("font_size", 42)
+	dia.add_theme_font_size_override("font_size", 40)
 	dia.add_theme_color_override("font_color", DIARIO_TEXTO)
 	dia.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(dia)
@@ -123,7 +123,7 @@ func _construir_diario() -> void:
 	var frase := Label.new()
 	frase.name = "Frase"
 	frase.text = "Un nivel nuevo cada día"
-	frase.add_theme_font_size_override("font_size", 16)
+	frase.add_theme_font_size_override("font_size", 15)
 	frase.add_theme_color_override("font_color", DIARIO_SUAVE)
 	frase.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	v.add_child(frase)
@@ -139,7 +139,7 @@ func _construir_diario() -> void:
 	var estrellas := Label.new()
 	estrellas.name = "Estrellas"
 	estrellas.text = "Sin jugar hoy"
-	estrellas.add_theme_font_size_override("font_size", 18)
+	estrellas.add_theme_font_size_override("font_size", 16)
 	estrellas.add_theme_color_override("font_color", DIARIO_ACENTO)
 	estrellas.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pie.add_child(estrellas)
@@ -150,7 +150,7 @@ func _construir_diario() -> void:
 	var ir := Label.new()
 	ir.name = "Ir"
 	ir.text = "Jugar  →"
-	ir.add_theme_font_size_override("font_size", 20)
+	ir.add_theme_font_size_override("font_size", 18)
 	ir.add_theme_color_override("font_color", DIARIO_TEXTO)
 	ir.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	pie.add_child(ir)
@@ -225,11 +225,11 @@ func _actualizar_diario() -> void:
 	var fecha := _fecha_hoy()
 	var dia := int(fecha.substr(8, 2))
 	var mes: String = MESES[int(fecha.substr(5, 2)) - 1]
-	$Contenido/Diario/Margen/VBox/Dia.text = "%d %s" % [dia, mes]
+	$Contenido/ModosCentro/Modos/Diario/Margen/VBox/Dia.text = "%d %s" % [dia, mes]
 	var hechas := 0
 	if has_node("/root/Progreso"):
 		hechas = get_node("/root/Progreso").diario_estrellas(fecha)
-	var estrellas: Label = $Contenido/Diario/Margen/VBox/Pie/Estrellas
+	var estrellas: Label = $Contenido/ModosCentro/Modos/Diario/Margen/VBox/Pie/Estrellas
 	if hechas > 0:
 		estrellas.text = _texto_estrellas(hechas)
 	else:
