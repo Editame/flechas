@@ -5,7 +5,6 @@ Código genérico de Editame Juegos. No debe conocer ningún juego concreto.
 - `config.gd`: preferencias persistentes (idioma, tema, sonido, intro).
 - `sesion.gd`: estado entre escenas (qué juego/nivel se juega).
 - `audio.gd`: sonido y vibración.
-- `progreso.gd`: progreso local (por ahora el de Flechas).
 - `api_client.gd`: API opcional (sugerencias/packs).
 - `tema.gd`: temas y estilos de UI.
 - `i18n.gd`: textos ES/EN.

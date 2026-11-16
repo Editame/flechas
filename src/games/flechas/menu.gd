@@ -20,8 +20,8 @@ func _ready() -> void:
 	_construir_stats()
 	if has_node("/root/Config"):
 		get_node("/root/Config").cambiado.connect(_refrescar_tema)
-	if has_node("/root/Progreso"):
-		get_node("/root/Progreso").actualizado.connect(_actualizar_menu)
+	if has_node("/root/ProgresoFlechas"):
+		get_node("/root/ProgresoFlechas").actualizado.connect(_actualizar_menu)
 	_refrescar_tema()
 
 func _refrescar_tema() -> void:
@@ -165,8 +165,8 @@ func _actualizar_menu() -> void:
 	var nivel := 1
 	var maximo := 1
 	var total_estrellas := 0
-	if has_node("/root/Progreso"):
-		var p = get_node("/root/Progreso")
+	if has_node("/root/ProgresoFlechas"):
+		var p = get_node("/root/ProgresoFlechas")
 		nivel = p.nivel_actual
 		maximo = p.nivel_maximo
 		total_estrellas = p.estrellas_totales
@@ -227,8 +227,8 @@ func _formato_tiempo(seg: float) -> String:
 
 func _actualizar_diario() -> void:
 	var sig := ""
-	if has_node("/root/Progreso"):
-		sig = get_node("/root/Progreso").siguiente_diario()
+	if has_node("/root/ProgresoFlechas"):
+		sig = get_node("/root/ProgresoFlechas").siguiente_diario()
 	var hoy := _fecha_hoy()
 	var tarjeta := $Contenido/ModosCentro/Modos/Diario
 	var dia_lbl: Label = tarjeta.get_node("Margen/VBox/Dia")
@@ -297,8 +297,8 @@ func _abrir_ajustes() -> void:
 
 func _jugar() -> void:
 	var nivel := 1
-	if has_node("/root/Progreso"):
-		nivel = get_node("/root/Progreso").nivel_actual
+	if has_node("/root/ProgresoFlechas"):
+		nivel = get_node("/root/ProgresoFlechas").nivel_actual
 	if has_node("/root/Sesion"):
 		var sesion = get_node("/root/Sesion")
 		sesion.modo = "clasico"

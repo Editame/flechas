@@ -21,7 +21,7 @@ config/icon="res://icon.svg"
 Sesion="*res://src/shared/sesion.gd"
 Config="*res://src/shared/config.gd"
 Audio="*res://src/shared/audio.gd"
-Progreso="*res://src/shared/progreso.gd"
+ProgresoFlechas="*res://src/games/flechas/progreso.gd"
 API_Client="*res://src/shared/api_client.gd"
 PackFlechas="*res://src/games/flechas/pack.gd"
 

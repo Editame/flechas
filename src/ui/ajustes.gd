@@ -23,8 +23,8 @@ func _ready() -> void:
 	$Confirmar.confirmed.connect(_reiniciar_progreso)
 
 func _reiniciar_progreso() -> void:
-	if has_node("/root/Progreso"):
-		get_node("/root/Progreso").reiniciar_todo()
+	if has_node("/root/ProgresoFlechas"):
+		get_node("/root/ProgresoFlechas").reiniciar_todo()
 	_volver()
 
 func _refrescar_textos() -> void:

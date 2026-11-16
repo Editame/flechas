@@ -7,8 +7,8 @@ func _ready() -> void:
 	$Contenido/Header/Ajustes.pressed.connect(_abrir_ajustes)
 	if has_node("/root/Config"):
 		get_node("/root/Config").cambiado.connect(_refrescar_tema)
-	if has_node("/root/Progreso"):
-		get_node("/root/Progreso").actualizado.connect(_refrescar_tema)
+	if has_node("/root/ProgresoFlechas"):
+		get_node("/root/ProgresoFlechas").actualizado.connect(_refrescar_tema)
 	_refrescar_tema()
 
 func _refrescar_tema() -> void:
@@ -26,6 +26,7 @@ func _refrescar_tema() -> void:
 
 func _construir_juegos() -> void:
 	var grid: GridContainer = $Contenido/JuegosCentro/Juegos
+	grid.columns = 2 if size.x >= 700.0 else 1
 	for hijo in grid.get_children():
 		hijo.free()
 	for juego in _leer_catalogo():
@@ -115,8 +116,8 @@ func _crear_tarjeta(juego: Dictionary) -> Button:
 	v.add_child(tit)
 
 	var sub := Label.new()
-	if id == "flechas" and has_node("/root/Progreso"):
-		var p = get_node("/root/Progreso")
+	if id == "flechas" and has_node("/root/ProgresoFlechas"):
+		var p = get_node("/root/ProgresoFlechas")
 		sub.text = "Nivel %d  ·  %d estrellas" % [p.nivel_actual, p.estrellas_totales]
 	else:
 		sub.text = desc

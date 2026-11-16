@@ -110,8 +110,8 @@ func _construir() -> void:
 	for dia in range(1, total + 1):
 		var fecha := _fecha(_anio, _mes, dia)
 		var hecho := false
-		if has_node("/root/Progreso"):
-			hecho = get_node("/root/Progreso").diario_hecho(fecha)
+		if has_node("/root/ProgresoFlechas"):
+			hecho = get_node("/root/ProgresoFlechas").diario_hecho(fecha)
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(84, 62)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
@@ -148,8 +148,8 @@ func _construir() -> void:
 			$Panel/VBox/BtnHoy.text = "Jugar el día %s" % _fecha_corta(sig)
 
 func _siguiente() -> String:
-	if has_node("/root/Progreso"):
-		return get_node("/root/Progreso").siguiente_diario()
+	if has_node("/root/ProgresoFlechas"):
+		return get_node("/root/ProgresoFlechas").siguiente_diario()
 	return ""
 
 func _cambiar_mes(delta: int) -> void:

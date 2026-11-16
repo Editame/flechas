@@ -7,6 +7,7 @@ delante. Incluye:
 - `juego.tscn`: partida (tablero, pista, victoria).
 - `diario.tscn`: calendario secuencial (un nivel por fecha, en orden).
 - `pack.gd`: lee los ZIP offline (clásico + diario).
+- `progreso.gd`: progreso local del juego (nivel, estrellas, diario).
 - `core/`: reglas y generador (Tablero, Flecha, Métricas, Grafo).
 - `cargador_*.gd`: restos del modo API (solo desarrollo).
 

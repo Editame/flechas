@@ -754,8 +754,8 @@ func _mostrar_victoria() -> void:
 	# Calcula tiempo y guarda métricas -> devuelve estrellas.
 	var tiempo := (Time.get_ticks_msec() - _tiempo_ini) / 1000.0
 	var estrellas := 3
-	if has_node("/root/Progreso"):
-		var prog = get_node("/root/Progreso")
+	if has_node("/root/ProgresoFlechas"):
+		var prog = get_node("/root/ProgresoFlechas")
 		if _es_diario and has_node("/root/Sesion"):
 			estrellas = prog.completar_diario(
 				get_node("/root/Sesion").fecha_diaria, tiempo,

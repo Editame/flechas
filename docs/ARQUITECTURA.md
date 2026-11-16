@@ -12,7 +12,6 @@ src/
     config.gd        Preferencias (idioma, tema, sonido, intro)
     sesion.gd        Estado entre escenas (juego/nivel actual)
     audio.gd         Sonido y vibración
-    progreso.gd      Guardado local de Flechas (nivel, estrellas, diario)
     api_client.gd    API opcional (packs, sugerencias)
     tema.gd          4 temas visuales y estilos
     i18n.gd          Textos ES/EN
@@ -31,6 +30,7 @@ src/
       juego.tscn     Partida
       diario.tscn    Calendario del desafío
       pack.gd        Carga de los ZIP offline
+      progreso.gd    Progreso de Flechas (nivel, estrellas, diario)
       core/          Reglas y generador (Tablero, Flecha, ...)
 assets/
   fonts/             Poppins + Great Vibes (marca)
