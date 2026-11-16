@@ -1,6 +1,6 @@
 # shared
 
-Código genérico de Editame Juegos. No debe conocer ningún juego concreto.
+Código genérico de Patio de Juegos. No debe conocer ningún juego concreto.
 
 - `config.gd`: preferencias persistentes (idioma, tema, sonido, intro).
 - `sesion.gd`: estado entre escenas (qué juego/nivel se juega).

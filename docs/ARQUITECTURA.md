@@ -1,4 +1,4 @@
-# Arquitectura de Editame Juegos
+# Arquitectura de Patio de Juegos
 
 La app es un **hub** de juegos pequeños. El objetivo es que cada juego pueda
 crecer (o desaparecer) sin arrastrar a los demás, y que un juego que no sea

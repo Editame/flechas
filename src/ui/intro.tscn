@@ -51,9 +51,9 @@ theme_override_constants/separation = 12
 [node name="Marca" type="Label" parent="Panel/VBox/Header"]
 layout_mode = 2
 size_flags_horizontal = 3
-text = "Editame"
+text = "Patio de Juegos"
 theme_override_fonts/font = ExtResource("2")
-theme_override_font_sizes/font_size = 40
+theme_override_font_sizes/font_size = 32
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="Saltar" type="Button" parent="Panel/VBox/Header"]
@@ -66,7 +66,7 @@ text = "Saltar"
 
 [node name="Titulo" type="Label" parent="Panel/VBox"]
 layout_mode = 2
-text = "Esto es Editame"
+text = "Esto es Patio de Juegos"
 theme_override_font_sizes/font_size = 34
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
@@ -88,7 +88,7 @@ theme_override_font_sizes/font_size = 19
 
 [node name="P2" type="Label" parent="Panel/VBox/Scroll/Texto"]
 layout_mode = 2
-text = "Editame nace para ellas y para cualquiera: juegos para jugar online u offline, sin cuentas y sin los benditos anuncios, para que los niños puedan jugar tranquilos."
+text = "Patio de Juegos nace para ellas y para cualquiera: juegos para jugar online u offline, sin cuentas y sin los benditos anuncios, para que los niños puedan jugar tranquilos."
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 19
 

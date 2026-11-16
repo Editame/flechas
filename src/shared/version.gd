@@ -16,7 +16,7 @@ extends RefCounted
 ##
 ## Al subir la versiÃ³n: cambia SOLO este nÃºmero.
 
-const VERSION := "0.10.0"
+const VERSION := "0.11.0"
 
 ## VersiÃ³n como string ("0.8.0").
 static func texto() -> String:

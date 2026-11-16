@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Editame Juegos"
+config/name="Patio de Juegos"
 config/description="Colección de juegos pequeños, sin anuncios ni cuentas."
 run/main_scene="res://src/ui/arranque.tscn"
 config/features=PackedStringArray("4.7")
