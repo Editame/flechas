@@ -26,7 +26,8 @@ func _refrescar_tema() -> void:
 
 func _construir_juegos() -> void:
 	var grid: GridContainer = $Contenido/JuegosCentro/Juegos
-	grid.columns = 2 if size.x >= 700.0 else 1
+	var ancho_fisico := DisplayServer.window_get_size().x
+	grid.columns = 2 if ancho_fisico >= 900 else 1
 	for hijo in grid.get_children():
 		hijo.free()
 	for juego in _leer_catalogo():
