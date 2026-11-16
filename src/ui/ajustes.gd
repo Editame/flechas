@@ -57,7 +57,9 @@ func _refrescar_textos() -> void:
 
 	for fila in ["BtnGuardar", "BtnTerminos", "BtnPrivacidad", "BtnServidor", "Reiniciar"]:
 		if has_node("Panel/VBox/Scroll/Contenido/" + fila):
-			Tema.estilizar_secundario(get_node("Panel/VBox/Scroll/Contenido/" + fila), Config.tema)
+			var b: Button = get_node("Panel/VBox/Scroll/Contenido/" + fila)
+			Tema.estilizar_secundario(b, Config.tema)
+			b.add_theme_font_size_override("font_size", 24)
 
 	var op_idi: OptionButton = $Panel/VBox/Scroll/Contenido/FilaIdioma/OpIdioma
 	op_idi.set_block_signals(true)

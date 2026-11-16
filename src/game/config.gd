@@ -18,6 +18,20 @@ var efectos: bool = true
 
 func _ready() -> void:
 	cargar()
+	_ajustar_escala()
+
+## Ajusta el tamaño del UI al dispositivo: en tablets baja la escala para que
+## las letras no se vean gigantes, y deja más unidades para repartir.
+func _ajustar_escala() -> void:
+	var arbol := Engine.get_main_loop() as SceneTree
+	if arbol == null:
+		return
+	var vp := DisplayServer.window_get_size()
+	if vp.x <= 0 or vp.y <= 0:
+		return
+	var lado := float(mini(vp.x, vp.y))
+	var factor := clampf(1280.0 / maxf(1.0, lado), 0.78, 1.0)
+	arbol.root.content_scale_factor = factor
 
 func cargar() -> void:
 	var cf := ConfigFile.new()

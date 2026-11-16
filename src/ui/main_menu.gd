@@ -34,10 +34,11 @@ func _refrescar_tema() -> void:
 	$Contenido/NivelesTitulo.add_theme_color_override("font_color", Tema.texto_suave(t))
 	$Contenido/Pie/Marca.add_theme_color_override("font_color", Tema.texto(t))
 	$Contenido/Pie/Version.add_theme_color_override("font_color", Tema.texto_suave(t))
+	$Contenido/Consejo/Texto.add_theme_color_override("font_color", Tema.texto_suave(t))
 	_estilar_diario()
 	_estilar_stats()
 	for i in 3:
-		var v: VBoxContainer = $Contenido/Stats/HBox.get_child(i)
+		var v: VBoxContainer = $Contenido/Stats/Centro/HBox.get_child(i)
 		(v.get_node("Valor") as Label).add_theme_color_override("font_color", Tema.texto(t))
 		(v.get_node("Etiqueta") as Label).add_theme_color_override("font_color", Tema.texto_suave(t))
 	_actualizar_menu()
@@ -176,6 +177,8 @@ func _actualizar_menu() -> void:
 func _construir_stats() -> void:
 	if $Contenido/Stats.get_child_count() > 0:
 		return
+	var centro := CenterContainer.new()
+	centro.name = "Centro"
 	var h := HBoxContainer.new()
 	h.name = "HBox"
 	h.add_theme_constant_override("separation", 18)
@@ -185,14 +188,17 @@ func _construir_stats() -> void:
 		var valor := Label.new()
 		valor.name = "Valor"
 		valor.text = "0"
+		valor.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		valor.add_theme_font_size_override("font_size", 26)
 		var etq := Label.new()
 		etq.name = "Etiqueta"
+		etq.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		etq.add_theme_font_size_override("font_size", 13)
 		v.add_child(valor)
 		v.add_child(etq)
 		h.add_child(v)
-	$Contenido/Stats.add_child(h)
+	centro.add_child(h)
+	$Contenido/Stats.add_child(centro)
 
 func _estilar_stats() -> void:
 	var t := Config.tema
@@ -205,14 +211,14 @@ func _estilar_stats() -> void:
 	$Contenido/Stats.add_theme_stylebox_override("panel", sb)
 
 func _set_stat(i: int, valor: String, etiqueta: String) -> void:
-	var v: VBoxContainer = $Contenido/Stats/HBox.get_child(i)
+	var v: VBoxContainer = $Contenido/Stats/Centro/HBox.get_child(i)
 	(v.get_node("Valor") as Label).text = valor
 	(v.get_node("Etiqueta") as Label).text = etiqueta
 
 func _formato_tiempo(seg: float) -> String:
 	var mins := int(seg / 60.0)
 	if mins >= 60:
-		return "%dh %02d" % [int(mins / 60.0), mins % 60]
+		return "%dh %02dm" % [int(mins / 60.0), mins % 60]
 	return "%d min" % mins
 
 func _actualizar_diario() -> void:

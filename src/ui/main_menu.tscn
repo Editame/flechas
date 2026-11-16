@@ -40,7 +40,7 @@ offset_left = 22.0
 offset_top = 22.0
 offset_right = -22.0
 offset_bottom = -18.0
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="Header" type="HBoxContainer" parent="Contenido"]
 layout_mode = 2
@@ -70,17 +70,41 @@ theme_override_font_sizes/font_size = 19
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
 
 [node name="Diario" type="Button" parent="Contenido"]
-custom_minimum_size = Vector2(0, 228)
+custom_minimum_size = Vector2(0, 240)
 layout_mode = 2
 size_flags_horizontal = 3
 text = ""
 
-[node name="Stats" type="PanelContainer" parent="Contenido"]
-layout_mode = 2
-
-[node name="Espacio" type="Control" parent="Contenido"]
+[node name="Espacio1" type="Control" parent="Contenido"]
 layout_mode = 2
 size_flags_vertical = 3
+size_flags_stretch_ratio = 0.7
+
+[node name="Stats" type="PanelContainer" parent="Contenido"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+size_flags_vertical = 1
+
+[node name="Espacio2" type="Control" parent="Contenido"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.55
+
+[node name="Consejo" type="PanelContainer" parent="Contenido"]
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+
+[node name="Texto" type="Label" parent="Contenido/Consejo"]
+layout_mode = 2
+text = "Toca una flecha cuya salida esté libre. Si está bloqueada, se marca en rojo y no se mueve."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
+
+[node name="Espacio3" type="Control" parent="Contenido"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.55
 
 [node name="NivelesTitulo" type="Label" parent="Contenido"]
 layout_mode = 2
@@ -92,6 +116,11 @@ theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_override_constants/separation = 10
+
+[node name="Espacio4" type="Control" parent="Contenido"]
+layout_mode = 2
+size_flags_vertical = 3
+size_flags_stretch_ratio = 0.35
 
 [node name="Jugar" type="Button" parent="Contenido"]
 custom_minimum_size = Vector2(0, 96)

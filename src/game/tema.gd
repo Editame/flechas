@@ -235,6 +235,7 @@ static func estilizar_secundario(btn: Button, t: int) -> void:
 	btn.add_theme_stylebox_override("hover", normal)
 	btn.add_theme_stylebox_override("pressed", pulsado)
 	btn.add_theme_stylebox_override("focus", StyleBoxEmpty.new())
+	btn.add_theme_font_override("font", load("res://assets/fonts/Poppins-Medium.ttf"))
 	btn.add_theme_color_override("font_color", texto(t))
 	btn.add_theme_color_override("font_hover_color", texto(t))
 	btn.add_theme_color_override("font_pressed_color", texto(t))
