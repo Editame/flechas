@@ -1,39 +1,39 @@
 class_name Tema
 extends RefCounted
 
-## Paleta: fondo blanco grisáceo suave, flechas AZUL TURQUESA.
-## Tema por defecto: flechas turquesa. Tema COLORES: variados.
+## Paleta del jugador web, portada a Godot.
+## Fondo muy oscuro, paneles azulados, acento azul y flechas de colores vivos.
 
-const FONDO_BASE := Color(0.94, 0.95, 0.96)      # blanco grisáceo suave
-const NAVY := Color(0.078, 0.110, 0.227)         # #141C3A azul marino oscuro (de la referencia)
-const ACENTO := Color(0.078, 0.110, 0.227)       # navy para UI
-const TEXTO := Color(0.12, 0.16, 0.28)
-const TEXTO_SUAVE := Color(0.45, 0.48, 0.55)
+const FONDO := Color("#0b1020")
+const PANEL := Color("#131a2e")
+const PANEL_2 := Color("#1a2340")
+const LINEA := Color("#26314f")
+const TEXTO := Color("#e8edf7")
+const TEXTO_SUAVE := Color("#93a0bd")
+const ACENTO := Color("#6c8cff")
+const OK := Color("#3ddc97")
+const MAL := Color("#ff5d73")
+const AVISO := Color("#ffc857")
 
-const PASTEL: Array[Color] = [
-	Color(0.13, 0.62, 0.64),   # turquesa
-	Color(0.42, 0.62, 0.86),   # azul
-	Color(0.55, 0.72, 0.42),   # verde
-	Color(0.90, 0.60, 0.35),   # naranja
-	Color(0.66, 0.52, 0.82),   # morado
-	Color(0.90, 0.45, 0.55),   # rosa
-	Color(0.40, 0.72, 0.70),   # verde agua
+## Colores de las flechas (los mismos del jugador web).
+const PALETA: Array[Color] = [
+	Color("#5b8cff"), Color("#3ddc97"), Color("#ffc857"), Color("#ff7b9c"),
+	Color("#b388ff"), Color("#4dd0e1"), Color("#f48fb1"), Color("#9ccc65"),
+	Color("#ffab40"), Color("#80cbc4"), Color("#ce93d8"), Color("#90a4ae"),
 ]
+const ROJO_COLISION := Color("#ff5d73")
 
-const ROJO_COLISION := Color(0.87, 0.25, 0.28)
+static func paleta() -> Array[Color]:
+	return PALETA
 
-## Fondo (blanco grisáceo en ambos temas).
+## Fondo del tablero (siempre oscuro).
 static func fondo(_tema: int) -> Color:
-	return FONDO_BASE
+	return FONDO
 
-## Color de una flecha (por su id) según el tema.
-static func color_flecha(tema: int, id: int) -> Color:
-	match tema:
-		Config.Tema.COLORES:
-			return PASTEL[id % PASTEL.size()]
-		_:
-			return NAVY
+## Color de una flecha segun el id.
+static func color_flecha(_tema: int, id: int) -> Color:
+	return PALETA[id % PALETA.size()]
 
-## Color del punto/nodo del dot-grid.
+## Punto de la malla (como en las referencias).
 static func color_punto(_tema: int) -> Color:
-	return Color(0.20, 0.28, 0.30, 0.12)
+	return Color(0.58, 0.66, 0.84, 0.18)

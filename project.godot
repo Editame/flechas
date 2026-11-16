@@ -22,6 +22,7 @@ Sesion="*res://src/game/sesion.gd"
 Config="*res://src/game/config.gd"
 Audio="*res://src/game/audio.gd"
 Progreso="*res://src/game/progreso.gd"
+API_Client="*res://src/game/api_client.gd"
 
 [display]
 
@@ -39,7 +40,7 @@ textures/vram_compression/import_etc2_astc=true
 
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-environment/defaults/default_clear_color=Color(0.94, 0.95, 0.96, 1)
+environment/defaults/default_clear_color=Color(0.043, 0.063, 0.125, 1)
 
 
 

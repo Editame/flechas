@@ -1,30 +1,35 @@
 extends Control
 
-## Menú principal: un solo modo (infinito). Botón "Jugar" que continúa desde el
-## nivel guardado. Header con opciones. Muestra nivel máximo alcanzado.
+## Menu principal: un solo modo (ir pasando niveles).
+## El nivel y su dificultad los decide juego.gd; aqui solo se arranca.
 
 func _ready() -> void:
 	_refrescar_textos()
+	$Header/Config.pressed.connect(_abrir_config)
 	$Header/Opciones.pressed.connect(_abrir_ajustes)
 	$Centro/Jugar.pressed.connect(_jugar)
 
 func _refrescar_textos() -> void:
-	$Titulo.text = I18n.t("app_titulo")
-	$Header/Opciones.text = "⚙"
-	# Versión desde la fuente única (project.godot), no escrita a mano: así no
-	# puede quedar desincronizada con el build instalado.
+	$Titulo.text = "Flechas"
+	$Centro/Jugar.text = "Jugar"
 	if has_node("Version"):
 		$Version.text = Version.etiqueta()
 	var nivel := 1
 	if has_node("/root/Progreso"):
 		nivel = get_node("/root/Progreso").nivel_actual
-	$Centro/Jugar.text = "▶  %s %d" % [I18n.t("jugar_nivel"), nivel]
-	# Subtítulo: progreso alcanzado.
+	$Centro/Jugar.text = "Jugar  ·  Nivel %d" % nivel
 	if has_node("/root/Progreso"):
 		var p = get_node("/root/Progreso")
-		$Sub.text = "%s %d  ·  ★ %d" % [I18n.t("nivel"), p.nivel_maximo, p.estrellas_totales]
+		$Sub.text = "Nivel máximo %d  ·  %d estrellas" % [p.nivel_maximo, p.estrellas_totales]
 	else:
 		$Sub.text = ""
+
+func _abrir_config() -> void:
+	var modal = load("res://src/ui/modal_config_servidor.tscn").instantiate()
+	modal.guardado.connect(func(u):
+		if has_node("/root/Sesion"):
+			get_node("/root/Sesion").configurar_servidor(u))
+	add_child(modal)
 
 func _abrir_ajustes() -> void:
 	get_tree().change_scene_to_file("res://src/ui/ajustes.tscn")
@@ -34,5 +39,7 @@ func _jugar() -> void:
 	if has_node("/root/Progreso"):
 		nivel = get_node("/root/Progreso").nivel_actual
 	if has_node("/root/Sesion"):
-		get_node("/root/Sesion").nivel_actual = nivel
+		var sesion = get_node("/root/Sesion")
+		sesion.nivel_actual = nivel
+		sesion.nivel_actual_id = ""
 	get_tree().change_scene_to_file("res://src/game/juego.tscn")

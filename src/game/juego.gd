@@ -88,10 +88,13 @@ func _ready() -> void:
 	resized.connect(queue_redraw)
 	if has_node("/root/Config"):
 		get_node("/root/Config").cambiado.connect(queue_redraw)
+	if has_node("/root/API_Client"):
+		var api := get_node("/root/API_Client")
+		if not api.nivel_listo.is_connected(_cargar_nivel_desde_api):
+			api.nivel_listo.connect(_cargar_nivel_desde_api)
+		if not api.error.is_connected(_on_error_api):
+			api.error.connect(_on_error_api)
 	cargar_nivel(numero_nivel)
-	# Empieza a generar el siguiente nivel en segundo plano, para que el botón
-	# "Otro nivel" responda al instante.
-	_lanzar_precarga()
 
 func _ir_menu() -> void:
 	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
@@ -119,40 +122,39 @@ func cargar_nivel(numero: int) -> void:
 	_marcadas.clear()
 	_zoom = 1.0
 	_pan = Vector2.ZERO
-	# Métricas del nivel.
 	_movimientos = 0
 	_errores = 0
 	_tiempo_ini = Time.get_ticks_msec()
 	if has_node("Victoria"):
 		$Victoria.visible = false
-	# FASE DE PRUEBAS: sin progresión de niveles. Siempre un nivel difícil o
-	# súper difícil nuevo (semilla aleatoria), paraevaluar solo la dificultad.
-	var nivel: Generador.Nivel = Generador._generar_en_vivo(randi(), 3, 4)
-	if nivel != null:
-		tablero = nivel.tablero
-		_optimos = (nivel.solucion as Array).size()
-		# Guarda semilla y solución para poder auditar este nivel exacto.
-		if has_node("/root/Sesion"):
-			get_node("/root/Sesion").fijar_nivel(
-				numero, nivel.semilla, nivel.solucion as Array)
+	var dificultad := dificultad_para(numero)
+	if has_node("/root/Sesion"):
+		get_node("/root/Sesion").dificultad_nivel = dificultad
 	if _label_titulo:
-		_label_titulo.text = "Prueba %d" % _saltos
-	if has_node("Dificultad") and tablero != null:
-		$Dificultad.text = I18n.t(Generador.dificultad(tablero))
-	_actualizar_debug()
+		_label_titulo.text = "Nivel %d" % numero
 	if _label_estado:
-		_label_estado.text = ""
+		_label_estado.text = "Cargando nivel..."
 	queue_redraw()
+	if has_node("/root/API_Client"):
+		get_node("/root/API_Client").siguiente(dificultad)
+	else:
+		_on_error_api("API no disponible")
 
-## PANEL DE DIAGNÓSTICO (tecla D).
-##
-## Muestra la SEMILLA del nivel y sus métricas objetivas. Con esa semilla se
-## puede reproducing el nivel exacto en tools/inspeccionar_semilla.gd y auditar
-## por qué un nivel es difícil o fácil, en vez de estimarlo a ojo.
-##
-## Métricas: la CADENA es la importante: cuántas jugadas hay que planificar
-## antes de poder resolver. "Libres@0" son las flechas que se pueden sacar sin
-## pensar al abrir el nivel: cuantas más, más fácil se siente.
+## Regla de dificultad: 1-2 facil, 3-5 medio y de ahi en adelante aleatorio
+## entre medio y maximo (con mas peso en dificil/super).
+func dificultad_para(numero: int) -> String:
+	if numero <= 2:
+		return "facil"
+	if numero <= 5:
+		return "medio"
+	var bolsa := [
+		"medio", "medio", "medio",
+		"dificil", "dificil", "dificil", "dificil",
+		"super", "super", "super",
+		"maximo", "maximo",
+	]
+	return bolsa[randi() % bolsa.size()]
+
 func _actualizar_debug() -> void:
 	if not has_node("Debug") or tablero == null:
 		return
@@ -586,34 +588,11 @@ func _texto_estrellas(n: int) -> String:
 
 func _siguiente_nivel() -> void:
 	$Victoria.visible = false
-	otro_nivel()
+	cargar_nivel(numero_nivel + 1)
 
-## FASE DE PRUEBAS: genera un nivel NUEVO, siempre difícil o súper difícil.
-##
-## No hay progresión de niveles ni tutorial por ahora: el objetivo esevaluar
-## únicamente la dificultad. Cada pulsación usa una semilla DISTINTA para que
-## nunca se repita el mismo tablero.
 func otro_nivel() -> void:
-	# Recoge el nivel pre-generado en segundo plano (si ya está listo).
-	var nivel := _tomar_precargado()
-	if nivel == null:
-		# No había ninguno listo: se genera ahora (puede tardar).
-		if _label_estado:
-			_label_estado.text = "Generando..."
-			queue_redraw()
-		nivel = Generador._generar_en_vivo(randi(), 3, 4)
-	if nivel == null:
-		push_warning("No se pudo generar nivel de prueba")
-		if _label_estado:
-			_label_estado.text = "Error al generar"
-		return
-	_saltos += 1
-	numero_nivel = _saltos
-	cargar_tablero(nivel)
-	# Arranca a generar el SIGUIENTE en segundo plano.
-	_lanzar_precarga()
+	cargar_nivel(numero_nivel + 1)
 
-## Devuelve el nivel pre-generado (espera al hilo si sigue trabajando).
 func _tomar_precargado() -> Generador.Nivel:
 	if not _hilo_vivo:
 		return _precargado
@@ -633,6 +612,54 @@ func _lanzar_precarga() -> void:
 
 func _trabajo_generar(semilla: int) -> void:
 	_precargado = Generador._generar_en_vivo(semilla, 3, 4)
+
+## Carga un nivel desde la API.
+## Se llama desde cargar_nivel() cuando viene de selector_niveles.
+## Construye el tablero con los datos que devuelve la API y arranca el nivel.
+func _cargar_nivel_desde_api(data: Dictionary) -> void:
+	if not data.has("flechas") or not data.has("forma"):
+		_on_error_api("El servidor devolvio un nivel incompleto")
+		return
+	tablero = Tablero.new(int(data["filas"]), int(data["columnas"]))
+	for celda in data["forma"]:
+		tablero.agregar_celda(Vector2i(int(celda[0]), int(celda[1])))
+	var paleta := Tema.paleta()
+	var i := 0
+	for fd in data["flechas"]:
+		var celdas: Array[Vector2i] = []
+		for c in fd["celdas"]:
+			celdas.append(Vector2i(int(c[0]), int(c[1])))
+		tablero.colocar(Flecha.new(int(fd["id"]), celdas, paleta[i % paleta.size()]))
+		i += 1
+	var solucion: Array = data.get("solucion", [])
+	if has_node("/root/Sesion"):
+		var sesion := get_node("/root/Sesion")
+		sesion.fijar_nivel(numero_nivel, int(data.get("semilla", 0)), solucion)
+		sesion.dificultad_nivel = str(data.get("dificultad", sesion.dificultad_nivel))
+	_optimos = solucion.size()
+	_resuelto = false
+	_historial.clear()
+	_marcadas.clear()
+	_zoom = 1.0
+	_pan = Vector2.ZERO
+	_movimientos = 0
+	_errores = 0
+	_tiempo_ini = Time.get_ticks_msec()
+	if has_node("Victoria"):
+		$Victoria.visible = false
+	if has_node("Dificultad"):
+		$Dificultad.text = I18n.t(str(data.get("dificultad", "medio")))
+	if _label_estado:
+		_label_estado.text = ""
+	print("[juego] nivel ", numero_nivel, " ", tablero.filas, "x", tablero.columnas, " flechas=", tablero.cantidad_flechas(), " dificultad=", str(data.get("dificultad", "?")))
+	_actualizar_debug()
+	queue_redraw()
+
+func _on_error_api(mensaje: String) -> void:
+	printerr("[juego] ", mensaje)
+	if _label_estado:
+		_label_estado.text = mensaje
+	queue_redraw()
 
 func _exit_tree() -> void:
 	# Nunca dejar un hilo vivo al salir de la escena.
@@ -681,7 +708,7 @@ func siguiente() -> void:
 	if numero_nivel < 10:
 		cargar_nivel(numero_nivel + 1)
 
-# --- Geometría (píxeles <-> celdas) con pan/zoom ---
+## Carga un nivel ya generado (compartido por carga inicial y botón).
 func _calcular_geometria() -> void:
 	var area := size
 	if area.x < 10.0 or area.y < 10.0:
