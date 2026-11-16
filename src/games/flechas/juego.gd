@@ -147,7 +147,7 @@ func _refrescar_tema() -> void:
 	queue_redraw()
 
 func _ir_menu() -> void:
-	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/menu.tscn")
 
 func _abrir_modal() -> void:
 	# Sincroniza los checks con la config actual y muestra el modal (sin salir).
@@ -188,6 +188,11 @@ func cargar_nivel(numero: int) -> void:
 	if _label_estado:
 		_label_estado.text = "Cargando nivel..."
 	queue_redraw()
+	if has_node("/root/PackFlechas"):
+		var empaquetado = get_node("/root/PackFlechas").nivel_clasico(numero)
+		if not empaquetado.is_empty():
+			_cargar_nivel_desde_api(empaquetado)
+			return
 	if has_node("/root/API_Client"):
 		get_node("/root/API_Client").siguiente(dificultad)
 	else:
@@ -217,6 +222,14 @@ func _cargar_diario() -> void:
 	if _label_estado:
 		_label_estado.text = "Cargando..."
 	queue_redraw()
+	if has_node("/root/PackFlechas"):
+		var fecha := ""
+		if has_node("/root/Sesion"):
+			fecha = get_node("/root/Sesion").fecha_diaria
+		var empaquetado = get_node("/root/PackFlechas").nivel_diario(fecha)
+		if not empaquetado.is_empty():
+			_cargar_nivel_desde_api(empaquetado)
+			return
 	if has_node("/root/API_Client"):
 		var semilla := 0
 		if has_node("/root/Sesion"):

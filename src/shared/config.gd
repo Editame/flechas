@@ -15,6 +15,7 @@ var tema: int = TemaApp.AMANECER
 var sonido: bool = true
 var vibracion: bool = true
 var efectos: bool = true
+var intro_vista: bool = false
 
 func _ready() -> void:
 	cargar()
@@ -41,6 +42,7 @@ func cargar() -> void:
 		sonido = bool(cf.get_value("pref", "sonido", true))
 		vibracion = bool(cf.get_value("pref", "vibracion", true))
 		efectos = bool(cf.get_value("pref", "efectos", true))
+		intro_vista = bool(cf.get_value("pref", "intro_vista", false))
 
 func guardar() -> void:
 	var cf := ConfigFile.new()
@@ -49,6 +51,7 @@ func guardar() -> void:
 	cf.set_value("pref", "sonido", sonido)
 	cf.set_value("pref", "vibracion", vibracion)
 	cf.set_value("pref", "efectos", efectos)
+	cf.set_value("pref", "intro_vista", intro_vista)
 	cf.save(RUTA)
 
 func set_idioma(v: int) -> void:
@@ -72,4 +75,8 @@ func set_vibracion(v: bool) -> void:
 
 func set_efectos(v: bool) -> void:
 	efectos = v
+	guardar()
+
+func set_intro_vista(v: bool) -> void:
+	intro_vista = v
 	guardar()

@@ -71,6 +71,9 @@ const TEXTOS := {
 	"est_niveles": {"es": "Niveles", "en": "Levels"},
 	"est_perfectos": {"es": "Perfectos", "en": "Perfect"},
 	"est_tiempo": {"es": "Tiempo", "en": "Time"},
+	"nuestra_historia": {"es": "Nuestra historia", "en": "Our story"},
+	"sugerencias": {"es": "Caja de sugerencias", "en": "Suggestion box"},
+	"sec_editame": {"es": "Editame", "en": "Editame"},
 }
 
 static func t(clave: String) -> String:

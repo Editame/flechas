@@ -26,13 +26,13 @@ func _init() -> void:
 		print("  [OK] los 10 niveles son resolubles")
 
 	# 2) Instanciar escenas.
-	var menu := load("res://src/ui/main_menu.tscn")
+	var menu := load("res://src/games/flechas/menu.tscn")
 	if menu != null and menu.can_instantiate():
 		print("  [OK] main_menu.tscn instanciable")
 	else:
 		print("  [FALLO] main_menu.tscn"); fallos += 1
 
-	var juego := load("res://src/game/juego.tscn")
+	var juego := load("res://src/games/flechas/juego.tscn")
 	if juego != null and juego.can_instantiate():
 		print("  [OK] juego.tscn instanciable")
 	else:

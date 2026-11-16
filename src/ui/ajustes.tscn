@@ -136,6 +136,22 @@ layout_mode = 2
 custom_minimum_size = Vector2(0, 56)
 text = "Guardar tu progreso"
 
+[node name="SecEditame" type="Label" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+text = "Editame"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="BtnHistoria" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+text = "Nuestra historia"
+
+[node name="BtnSugerencias" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+text = "Caja de sugerencias"
+
 [node name="SecLegal" type="Label" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
 text = "Legal"

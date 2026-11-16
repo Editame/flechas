@@ -12,6 +12,7 @@ const DIARIO_TEXTO := Color("#fff4e6")
 const DIARIO_SUAVE := Color("#c9b8e8")
 
 func _ready() -> void:
+	$Contenido/Header/Atras.pressed.connect(_volver_hub)
 	$Contenido/Header/Ajustes.pressed.connect(_abrir_ajustes)
 	$Contenido/Jugar.pressed.connect(_jugar)
 	$Contenido/ModosCentro/Modos/Diario.pressed.connect(_abrir_diario)
@@ -29,6 +30,8 @@ func _refrescar_tema() -> void:
 	$Fondo.color = Tema.fondo(t)
 	Tema.estilizar_secundario($Contenido/Header/Ajustes, t)
 	$Contenido/Header/Ajustes.add_theme_font_size_override("font_size", 24)
+	Tema.estilizar_secundario($Contenido/Header/Atras, t)
+	$Contenido/Header/Atras.add_theme_font_size_override("font_size", 26)
 	$Contenido/Header/Titulo.add_theme_color_override("font_color", Tema.texto(t))
 	$Contenido/Sub.add_theme_color_override("font_color", Tema.texto_suave(t))
 	$Contenido/NivelesTitulo.add_theme_color_override("font_color", Tema.texto_suave(t))
@@ -283,8 +286,11 @@ func _fecha_hoy() -> String:
 	var d := Time.get_date_dict_from_system()
 	return "%04d-%02d-%02d" % [int(d["year"]), int(d["month"]), int(d["day"])]
 
+func _volver_hub() -> void:
+	get_tree().change_scene_to_file("res://src/ui/hub.tscn")
+
 func _abrir_diario() -> void:
-	get_tree().change_scene_to_file("res://src/ui/desafio_diario.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/diario.tscn")
 
 func _abrir_ajustes() -> void:
 	get_tree().change_scene_to_file("res://src/ui/ajustes.tscn")
@@ -299,4 +305,4 @@ func _jugar() -> void:
 		sesion.fecha_diaria = ""
 		sesion.nivel_actual = nivel
 		sesion.nivel_actual_id = ""
-	get_tree().change_scene_to_file("res://src/game/juego.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/juego.tscn")

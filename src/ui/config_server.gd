@@ -41,4 +41,4 @@ func _guardar() -> void:
 func _cancelar() -> void:
 	if has_node("/root/Sesion"):
 		get_node("/root/Sesion").configurar_servidor(_lineedit.text.strip_edges())
-	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/menu.tscn")

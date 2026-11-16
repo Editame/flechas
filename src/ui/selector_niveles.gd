@@ -28,7 +28,7 @@ func _ready() -> void:
 	cargar_niveles()
 
 func _ir_menu() -> void:
-	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/menu.tscn")
 
 func cargar_niveles() -> void:
 	_panel_carga.visible = true
@@ -72,4 +72,4 @@ func _on_error_api(mensaje):
 
 func _on_grid_item_pressed(id: String) -> void:
 	nivel_seleccionado.emit(id)
-	get_tree().change_scene_to_file("res://src/game/juego.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/juego.tscn")

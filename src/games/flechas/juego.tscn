@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://bflechasjuego01"]
 
-[ext_resource type="Script" path="res://src/game/juego.gd" id="1"]
+[ext_resource type="Script" path="res://src/games/flechas/juego.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/iconos/ver_web.svg" id="2"]
 [ext_resource type="Texture2D" path="res://assets/iconos/pista.svg" id="3"]
 

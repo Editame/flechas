@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://bflechasmenu01"]
 
-[ext_resource type="Script" path="res://src/ui/main_menu.gd" id="1"]
+[ext_resource type="Script" path="res://src/games/flechas/menu.gd" id="1"]
 [ext_resource type="FontFile" path="res://assets/fonts/GreatVibes-Regular.ttf" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="icon_btn"]
@@ -45,6 +45,15 @@ theme_override_constants/separation = 12
 [node name="Header" type="HBoxContainer" parent="Contenido"]
 layout_mode = 2
 theme_override_constants/separation = 12
+
+[node name="Atras" type="Button" parent="Contenido/Header"]
+custom_minimum_size = Vector2(58, 58)
+layout_mode = 2
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+theme_override_font_sizes/font_size = 26
+text = "‹"
 
 [node name="Titulo" type="Label" parent="Contenido/Header"]
 layout_mode = 2

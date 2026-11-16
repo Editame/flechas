@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://bflechasdiario01"]
 
-[ext_resource type="Script" path="res://src/ui/desafio_diario.gd" id="1"]
+[ext_resource type="Script" path="res://src/games/flechas/diario.gd" id="1"]
 
 [node name="DesafioDiario" type="Control"]
 layout_mode = 3

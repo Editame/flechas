@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "juegos": [
+    {
+      "id": "flechas",
+      "titulo": "Flechas",
+      "descripcion": "Despeja el tablero sacando flechas en el orden correcto.",
+      "tipo": "godot",
+      "estado": "listo",
+      "escena": "res://src/games/flechas/menu.tscn",
+      "fondo": "#241a3d",
+      "acento": "#ffb703",
+      "texto": "#fff4e6",
+      "suave": "#c9b8e8"
+    },
+    {
+      "id": "proximo",
+      "titulo": "Próximamente",
+      "descripcion": "Otro juego en camino.",
+      "tipo": "pronto"
+    }
+  ]
+}

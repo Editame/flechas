@@ -1,0 +1,137 @@
+[gd_scene load_steps=4 format=3 uid="uid://beditameintro01"]
+
+[ext_resource type="Script" path="res://src/ui/intro.gd" id="1"]
+[ext_resource type="FontFile" path="res://assets/fonts/GreatVibes-Regular.ttf" id="2"]
+
+[sub_resource type="StyleBoxFlat" id="icon_btn"]
+bg_color = Color(0.098, 0.129, 0.227, 1)
+corner_radius_top_left = 18
+corner_radius_top_right = 18
+corner_radius_bottom_right = 18
+corner_radius_bottom_left = 18
+content_margin_left = 18.0
+content_margin_top = 12.0
+content_margin_right = 18.0
+content_margin_bottom = 12.0
+
+[node name="Intro" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Fondo" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.043, 0.063, 0.125, 1)
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = 18.0
+offset_right = -18.0
+offset_bottom = -18.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Marca" type="Label" parent="Panel/VBox/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Editame"
+theme_override_fonts/font = ExtResource("2")
+theme_override_font_sizes/font_size = 40
+theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
+
+[node name="Saltar" type="Button" parent="Panel/VBox/Header"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("icon_btn")
+theme_override_styles/hover = SubResource("icon_btn")
+theme_override_styles/pressed = SubResource("icon_btn")
+theme_override_font_sizes/font_size = 18
+text = "Saltar"
+
+[node name="Titulo" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "Esto es Editame"
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
+
+[node name="Scroll" type="ScrollContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Texto" type="VBoxContainer" parent="Panel/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="P1" type="Label" parent="Panel/VBox/Scroll/Texto"]
+layout_mode = 2
+text = "Esto no empezó como un negocio. Empezó porque mis hijas querían jugar y, cada poco, un anuncio les cortaba la partida."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 19
+
+[node name="P2" type="Label" parent="Panel/VBox/Scroll/Texto"]
+layout_mode = 2
+text = "Editame nace para ellas y para cualquiera: juegos para jugar online u offline, sin cuentas y sin los benditos anuncios, para que los niños puedan jugar tranquilos."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 19
+
+[node name="P3" type="Label" parent="Panel/VBox/Scroll/Texto"]
+layout_mode = 2
+text = "Que sea gratis no significa que no cueste. Esto lleva tiempo y dinero, así que estoy buscando una forma justa de monetizar: colaboraciones, una caja de apoyo o, quizá, un anuncio opcional. Nunca un anuncio que te corte el juego."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 19
+
+[node name="P4" type="Label" parent="Panel/VBox/Scroll/Texto"]
+layout_mode = 2
+text = "Esto es solo el principio. Si tienes una idea de juego —con una referencia, una imagen o un enlace— mándala por la caja de sugerencias. La leeré."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 19
+
+[node name="P5" type="Label" parent="Panel/VBox/Scroll/Texto"]
+layout_mode = 2
+text = "Gracias por jugar."
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 19
+
+[node name="Destacado" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "Sin anuncios. Sin cuentas. Online u offline."
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(1, 0.72, 0.01, 1)
+
+[node name="Entrar" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+text = "Entrar"
+theme_override_font_sizes/font_size = 28
+
+[node name="Sugerencias" type="Button" parent="Panel/VBox"]
+custom_minimum_size = Vector2(0, 54)
+layout_mode = 2
+text = "Caja de sugerencias"
+theme_override_font_sizes/font_size = 20
+
+[node name="Firma" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = "Gracias por estar aquí.  — Editame"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)

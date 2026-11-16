@@ -14,6 +14,8 @@ func _ready() -> void:
 	$Panel/VBox/Scroll/Contenido/FVibracion/Chk.toggled.connect(func(v): Config.set_vibracion(v))
 	$Panel/VBox/Scroll/Contenido/FEfectos/Chk.toggled.connect(func(v): Config.set_efectos(v))
 	$Panel/VBox/Scroll/Contenido/BtnGuardar.pressed.connect(_proximamente.bind("guardar_progreso"))
+	$Panel/VBox/Scroll/Contenido/BtnHistoria.pressed.connect(_abrir_historia)
+	$Panel/VBox/Scroll/Contenido/BtnSugerencias.pressed.connect(_abrir_sugerencias)
 	$Panel/VBox/Scroll/Contenido/BtnTerminos.pressed.connect(_proximamente.bind("terminos"))
 	$Panel/VBox/Scroll/Contenido/BtnPrivacidad.pressed.connect(_proximamente.bind("privacidad"))
 	$Panel/VBox/Scroll/Contenido/BtnServidor.pressed.connect(_abrir_servidor)
@@ -36,6 +38,9 @@ func _refrescar_textos() -> void:
 	$Panel/VBox/Scroll/Contenido/FEfectos/Lbl.text = I18n.t("efectos")
 	$Panel/VBox/Scroll/Contenido/SecCuenta.text = I18n.t("cuenta_seccion")
 	$Panel/VBox/Scroll/Contenido/BtnGuardar.text = I18n.t("guardar_progreso")
+	$Panel/VBox/Scroll/Contenido/SecEditame.text = I18n.t("sec_editame")
+	$Panel/VBox/Scroll/Contenido/BtnHistoria.text = I18n.t("nuestra_historia")
+	$Panel/VBox/Scroll/Contenido/BtnSugerencias.text = I18n.t("sugerencias")
 	$Panel/VBox/Scroll/Contenido/SecLegal.text = I18n.t("legal")
 	$Panel/VBox/Scroll/Contenido/BtnTerminos.text = I18n.t("terminos")
 	$Panel/VBox/Scroll/Contenido/BtnPrivacidad.text = I18n.t("privacidad")
@@ -50,12 +55,12 @@ func _refrescar_textos() -> void:
 	$Panel/VBox/Scroll/Contenido/BtnServidor.visible = Features.servidor_visible()
 	$Panel/VBox/Scroll/Contenido/SecAvanzado.visible = Features.servidor_visible()
 
-	for seccion in ["SecApariencia", "SecSonido", "SecCuenta", "SecLegal", "SecAvanzado"]:
+	for seccion in ["SecApariencia", "SecSonido", "SecCuenta", "SecEditame", "SecLegal", "SecAvanzado"]:
 		if has_node("Panel/VBox/Scroll/Contenido/" + seccion):
 			get_node("Panel/VBox/Scroll/Contenido/" + seccion).add_theme_color_override(
 					"font_color", Tema.texto_suave(Config.tema))
 
-	for fila in ["BtnGuardar", "BtnTerminos", "BtnPrivacidad", "BtnServidor", "Reiniciar"]:
+	for fila in ["BtnGuardar", "BtnHistoria", "BtnSugerencias", "BtnTerminos", "BtnPrivacidad", "BtnServidor", "Reiniciar"]:
 		if has_node("Panel/VBox/Scroll/Contenido/" + fila):
 			var b: Button = get_node("Panel/VBox/Scroll/Contenido/" + fila)
 			Tema.estilizar_secundario(b, Config.tema)
@@ -91,6 +96,15 @@ func _cambiar_tema(idx: int) -> void:
 	Config.set_tema(idx)
 	$Fondo.color = Tema.fondo(Config.tema)
 
+func _abrir_historia() -> void:
+	get_tree().change_scene_to_file("res://src/ui/intro.tscn")
+
+func _abrir_sugerencias() -> void:
+	var base := "http://127.0.0.1:8077/flechas/v1"
+	if has_node("/root/API_Client"):
+		base = get_node("/root/API_Client").url_base()
+	OS.shell_open(base + "/static/sugerencias.html")
+
 func _abrir_servidor() -> void:
 	var modal = load("res://src/ui/modal_config_servidor.tscn").instantiate()
 	modal.guardado.connect(func(u):
@@ -107,4 +121,4 @@ func _proximamente(clave: String) -> void:
 	d.popup_centered(Vector2i(420, 160))
 
 func _volver() -> void:
-	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/ui/hub.tscn")

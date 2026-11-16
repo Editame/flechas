@@ -169,10 +169,10 @@ func _jugar() -> void:
 		sesion.fecha_diaria = sig
 		sesion.dificultad_nivel = "medio"
 		sesion.semilla_nivel = int(sig.replace("-", ""))
-	get_tree().change_scene_to_file("res://src/game/juego.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/juego.tscn")
 
 func _volver() -> void:
-	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/games/flechas/menu.tscn")
 
 func _fecha(anio: int, mes: int, dia: int) -> String:
 	return "%04d-%02d-%02d" % [anio, mes, dia]
