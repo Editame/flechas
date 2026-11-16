@@ -87,6 +87,7 @@ func _construir() -> void:
 	for d in DIAS:
 		var l := Label.new()
 		l.text = d
+		l.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		l.add_theme_font_size_override("font_size", 18)
 		l.add_theme_color_override("font_color", SUAVE)
@@ -111,6 +112,7 @@ func _construir() -> void:
 			estrellas = get_node("/root/Progreso").diario_estrellas(fecha)
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(84, 62)
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.focus_mode = Control.FOCUS_NONE
 		b.text = "%d ★" % dia if hecho else str(dia)
 		b.add_theme_font_size_override("font_size", 20 if hecho else 22)

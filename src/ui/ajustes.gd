@@ -50,18 +50,32 @@ func _refrescar_textos() -> void:
 	$Panel/VBox/Scroll/Contenido/BtnServidor.visible = Features.servidor_visible()
 	$Panel/VBox/Scroll/Contenido/SecAvanzado.visible = Features.servidor_visible()
 
+	for seccion in ["SecApariencia", "SecSonido", "SecCuenta", "SecLegal", "SecAvanzado"]:
+		if has_node("Panel/VBox/Scroll/Contenido/" + seccion):
+			get_node("Panel/VBox/Scroll/Contenido/" + seccion).add_theme_color_override(
+					"font_color", Tema.texto_suave(Config.tema))
+
+	for fila in ["BtnGuardar", "BtnTerminos", "BtnPrivacidad", "BtnServidor", "Reiniciar"]:
+		if has_node("Panel/VBox/Scroll/Contenido/" + fila):
+			Tema.estilizar_secundario(get_node("Panel/VBox/Scroll/Contenido/" + fila), Config.tema)
+
 	var op_idi: OptionButton = $Panel/VBox/Scroll/Contenido/FilaIdioma/OpIdioma
+	op_idi.set_block_signals(true)
 	op_idi.clear()
 	op_idi.add_item(I18n.t("espanol"), Config.Idioma.ES)
 	op_idi.add_item(I18n.t("ingles"), Config.Idioma.EN)
 	op_idi.select(Config.idioma)
+	op_idi.set_block_signals(false)
 
 	var op_tema: OptionButton = $Panel/VBox/Scroll/Contenido/FilaTema/OpTema
+	op_tema.set_block_signals(true)
 	op_tema.clear()
 	op_tema.add_item(I18n.t("tema_neon"), 0)
 	op_tema.add_item(I18n.t("tema_cristal"), 1)
 	op_tema.add_item(I18n.t("tema_pizarra"), 2)
+	op_tema.add_item(I18n.t("tema_amanecer"), 3)
 	op_tema.select(Config.tema)
+	op_tema.set_block_signals(false)
 
 	$Panel/VBox/Scroll/Contenido/FSonido/Chk.button_pressed = Config.sonido
 	$Panel/VBox/Scroll/Contenido/FVibracion/Chk.button_pressed = Config.vibracion

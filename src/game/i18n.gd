@@ -22,6 +22,7 @@ const TEXTOS := {
 	"tema_neon": {"es": "Neón sereno", "en": "Calm neon"},
 	"tema_cristal": {"es": "Cristal", "en": "Glass"},
 	"tema_pizarra": {"es": "Pizarra", "en": "Slate"},
+	"tema_amanecer": {"es": "Amanecer", "en": "Sunrise"},
 	"espanol": {"es": "Español", "en": "Spanish"},
 	"ingles": {"es": "Inglés", "en": "English"},
 	"cuenta": {"es": "Invitado", "en": "Guest"},
@@ -67,6 +68,9 @@ const TEXTOS := {
 	"un_nivel_cada_dia": {"es": "Un nivel nuevo cada día", "en": "A new level every day"},
 	"pista": {"es": "Pista", "en": "Hint"},
 	"clasico": {"es": "Clásico", "en": "Classic"},
+	"est_niveles": {"es": "Niveles", "en": "Levels"},
+	"est_perfectos": {"es": "Perfectos", "en": "Perfect"},
+	"est_tiempo": {"es": "Tiempo", "en": "Time"},
 }
 
 static func t(clave: String) -> String:

@@ -31,116 +31,89 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.043, 0.063, 0.125, 1)
 
-[node name="Ajustes" type="Button" parent="."]
-custom_minimum_size = Vector2(60, 60)
+[node name="Contenido" type="VBoxContainer" parent="."]
 layout_mode = 1
-anchors_preset = 1
-anchor_left = 1.0
+anchors_preset = 15
 anchor_right = 1.0
-offset_left = -80.0
-offset_top = 20.0
-offset_right = -20.0
-offset_bottom = 80.0
+anchor_bottom = 1.0
+offset_left = 22.0
+offset_top = 22.0
+offset_right = -22.0
+offset_bottom = -18.0
+theme_override_constants/separation = 14
+
+[node name="Header" type="HBoxContainer" parent="Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Titulo" type="Label" parent="Contenido/Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+text = "Flechas"
+theme_override_font_sizes/font_size = 42
+theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
+
+[node name="Ajustes" type="Button" parent="Contenido/Header"]
+custom_minimum_size = Vector2(58, 58)
+layout_mode = 2
 theme_override_styles/normal = SubResource("icon_btn")
 theme_override_styles/hover = SubResource("icon_btn")
 theme_override_styles/pressed = SubResource("icon_btn")
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 text = "⚙"
 
-[node name="Titulo" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 16.0
-offset_bottom = 78.0
-text = "Flechas"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 46
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
-
-[node name="Sub" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 80.0
-offset_bottom = 108.0
+[node name="Sub" type="Label" parent="Contenido"]
+layout_mode = 2
 text = ""
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 20
+theme_override_font_sizes/font_size = 19
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
 
-[node name="ModosScroll" type="ScrollContainer" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_left = 18.0
-offset_top = 128.0
-offset_right = -18.0
-offset_bottom = 348.0
-horizontal_scroll_mode = 1
-vertical_scroll_mode = 0
-follow_focus = true
-
-[node name="Modos" type="HBoxContainer" parent="ModosScroll"]
+[node name="Diario" type="Button" parent="Contenido"]
+custom_minimum_size = Vector2(0, 228)
 layout_mode = 2
-theme_override_constants/separation = 14
+size_flags_horizontal = 3
+text = ""
 
-[node name="Jugar" type="Button" parent="."]
-custom_minimum_size = Vector2(400, 92)
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -200.0
-offset_top = 380.0
-offset_right = 200.0
-offset_bottom = 472.0
-theme_override_font_sizes/font_size = 36
+[node name="Stats" type="PanelContainer" parent="Contenido"]
+layout_mode = 2
+
+[node name="Espacio" type="Control" parent="Contenido"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="NivelesTitulo" type="Label" parent="Contenido"]
+layout_mode = 2
+text = "Niveles"
+theme_override_font_sizes/font_size = 17
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="Niveles" type="HBoxContainer" parent="Contenido"]
+custom_minimum_size = Vector2(0, 88)
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Jugar" type="Button" parent="Contenido"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
 text = "Jugar"
 
-[node name="ProximosTitulo" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 506.0
-offset_bottom = 534.0
-text = "Próximos niveles"
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 18
-theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+[node name="Pie" type="VBoxContainer" parent="Contenido"]
+layout_mode = 2
+theme_override_constants/separation = 0
 
-[node name="Proximos" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 10
-anchor_right = 1.0
-offset_top = 542.0
-offset_bottom = 618.0
-theme_override_constants/separation = 12
-alignment = 1
-
-[node name="Marca" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -112.0
-offset_bottom = -50.0
+[node name="Marca" type="Label" parent="Contenido/Pie"]
+layout_mode = 2
 text = "Editame"
 horizontal_alignment = 1
 theme_override_fonts/font = ExtResource("2")
-theme_override_font_sizes/font_size = 46
+theme_override_font_sizes/font_size = 38
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 0.9)
 
-[node name="Version" type="Label" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -44.0
-offset_bottom = -12.0
-text = "v0.6.0"
+[node name="Version" type="Label" parent="Contenido/Pie"]
+layout_mode = 2
+text = "v0.9.0"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 18
+theme_override_font_sizes/font_size = 14
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)

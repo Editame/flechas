@@ -52,7 +52,7 @@ anchor_right = 1.0
 offset_left = 18.0
 offset_top = 108.0
 offset_right = -18.0
-offset_bottom = 860.0
+offset_bottom = 1000.0
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
@@ -85,12 +85,14 @@ text = "›"
 
 [node name="Semana" type="GridContainer" parent="Panel/VBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 columns = 7
 
 [node name="Dias" type="GridContainer" parent="Panel/VBox"]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/h_separation = 6
 theme_override_constants/v_separation = 6
 columns = 7

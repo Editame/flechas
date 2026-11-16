@@ -40,7 +40,6 @@ layout_mode = 2
 text = "Ajustes"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 40
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="Scroll" type="ScrollContainer" parent="Panel/VBox"]
 layout_mode = 2
@@ -66,7 +65,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Idioma"
 theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="OpIdioma" type="OptionButton" parent="Panel/VBox/Scroll/Contenido/FilaIdioma"]
 layout_mode = 2
@@ -80,7 +78,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Tema"
 theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="OpTema" type="OptionButton" parent="Panel/VBox/Scroll/Contenido/FilaTema"]
 layout_mode = 2
@@ -100,7 +97,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Sonido"
 theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="Chk" type="CheckButton" parent="Panel/VBox/Scroll/Contenido/FSonido"]
 layout_mode = 2
@@ -113,7 +109,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Vibración"
 theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="Chk" type="CheckButton" parent="Panel/VBox/Scroll/Contenido/FVibracion"]
 layout_mode = 2
@@ -126,7 +121,6 @@ layout_mode = 2
 size_flags_horizontal = 3
 text = "Efectos"
 theme_override_font_sizes/font_size = 24
-theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="Chk" type="CheckButton" parent="Panel/VBox/Scroll/Contenido/FEfectos"]
 layout_mode = 2

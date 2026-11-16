@@ -130,12 +130,20 @@ func _refrescar_tema() -> void:
 			Tema.estilizar_secundario(get_node(ruta), t)
 	if has_node("Modal/Panel"):
 		$Modal/Panel.add_theme_stylebox_override("panel", Tema.caja_panel(t))
+	if has_node("Header/Titulo"):
+		$Header/Titulo.add_theme_color_override("font_color", Tema.texto(t))
 	if has_node("Dificultad"):
 		$Dificultad.add_theme_color_override("font_color", Tema.texto_suave(t))
 	if has_node("Estado"):
 		$Estado.add_theme_color_override("font_color", Tema.texto(t))
+	if has_node("Victoria/Fondo"):
+		$Victoria/Fondo.color = Color(0.05, 0.04, 0.08, 0.72)
 	if has_node("Victoria/VBox/Mensaje"):
-		$Victoria/VBox/Mensaje.add_theme_color_override("font_color", Tema.texto(t))
+		$Victoria/VBox/Mensaje.add_theme_color_override("font_color", Color("#fff4e6"))
+	if has_node("Victoria/VBox/Sub"):
+		$Victoria/VBox/Sub.add_theme_color_override("font_color", Color("#fff4e6"))
+	if has_node("Victoria/VBox/Stats"):
+		$Victoria/VBox/Stats.add_theme_color_override("font_color", Color("#fff4e6"))
 	queue_redraw()
 
 func _ir_menu() -> void:
