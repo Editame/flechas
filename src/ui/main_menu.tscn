@@ -31,61 +31,92 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 color = Color(0.043, 0.063, 0.125, 1)
 
-[node name="Header" type="HBoxContainer" parent="."]
+[node name="Ajustes" type="Button" parent="."]
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 1
-anchors_preset = 10
+anchors_preset = 1
+anchor_left = 1.0
 anchor_right = 1.0
-offset_left = 18.0
-offset_top = 24.0
-offset_right = -18.0
-offset_bottom = 78.0
-theme_override_constants/separation = 12
-
-[node name="Config" type="Button" parent="Header"]
-custom_minimum_size = Vector2(150, 52)
-layout_mode = 2
+offset_left = -80.0
+offset_top = 20.0
+offset_right = -20.0
+offset_bottom = 80.0
 theme_override_styles/normal = SubResource("icon_btn")
 theme_override_styles/hover = SubResource("icon_btn")
 theme_override_styles/pressed = SubResource("icon_btn")
-theme_override_font_sizes/font_size = 24
-text = "Servidor"
-
-[node name="Opciones" type="Button" parent="Header"]
-custom_minimum_size = Vector2(150, 52)
-layout_mode = 2
-theme_override_styles/normal = SubResource("icon_btn")
-theme_override_styles/hover = SubResource("icon_btn")
-theme_override_styles/pressed = SubResource("icon_btn")
-theme_override_font_sizes/font_size = 24
-text = "Ajustes"
+theme_override_font_sizes/font_size = 26
+text = "⚙"
 
 [node name="Titulo" type="Label" parent="."]
 layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -260.0
-offset_top = 190.0
-offset_right = 260.0
-offset_bottom = 290.0
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 16.0
+offset_bottom = 78.0
 text = "Flechas"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 84
+theme_override_font_sizes/font_size = 46
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
 [node name="Sub" type="Label" parent="."]
 layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 80.0
+offset_bottom = 108.0
+text = ""
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 20
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="ModosScroll" type="ScrollContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 128.0
+offset_right = -18.0
+offset_bottom = 348.0
+horizontal_scroll_mode = 1
+vertical_scroll_mode = 0
+follow_focus = true
+
+[node name="Modos" type="HBoxContainer" parent="ModosScroll"]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="Jugar" type="Button" parent="."]
+custom_minimum_size = Vector2(400, 92)
+layout_mode = 1
 anchors_preset = 5
 anchor_left = 0.5
 anchor_right = 0.5
-offset_left = -260.0
-offset_top = 292.0
-offset_right = 260.0
-offset_bottom = 330.0
-text = "Despeja el tablero"
+offset_left = -200.0
+offset_top = 380.0
+offset_right = 200.0
+offset_bottom = 472.0
+theme_override_font_sizes/font_size = 36
+text = "Jugar"
+
+[node name="ProximosTitulo" type="Label" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 506.0
+offset_bottom = 534.0
+text = "Próximos niveles"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 28
+theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="Proximos" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 542.0
+offset_bottom = 618.0
+theme_override_constants/separation = 12
+alignment = 1
 
 [node name="Marca" type="Label" parent="."]
 layout_mode = 1
@@ -113,16 +144,3 @@ text = "v0.6.0"
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 18
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
-
-[node name="Centro" type="CenterContainer" parent="."]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = 360.0
-
-[node name="Jugar" type="Button" parent="Centro"]
-custom_minimum_size = Vector2(420, 108)
-layout_mode = 2
-theme_override_font_sizes/font_size = 40
-text = "Jugar"

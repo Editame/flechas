@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://bajfrws6fbl4g"]
+[gd_scene load_steps=2 format=3 uid="uid://bajfrws6fbl4g"]
 
 [ext_resource type="Script" path="res://src/ui/ajustes.gd" id="1"]
 
@@ -24,94 +24,154 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -380.0
-offset_right = 320.0
-offset_bottom = 380.0
+offset_left = -330.0
+offset_top = -580.0
+offset_right = 330.0
+offset_bottom = 580.0
 grow_horizontal = 2
 grow_vertical = 2
 
 [node name="VBox" type="VBoxContainer" parent="Panel"]
 layout_mode = 2
-theme_override_constants/separation = 24
+theme_override_constants/separation = 16
 
 [node name="Titulo" type="Label" parent="Panel/VBox"]
 layout_mode = 2
 text = "Ajustes"
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 44
+theme_override_font_sizes/font_size = 40
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
-[node name="FilaIdioma" type="HBoxContainer" parent="Panel/VBox"]
+[node name="Scroll" type="ScrollContainer" parent="Panel/VBox"]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="Contenido" type="VBoxContainer" parent="Panel/VBox/Scroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+
+[node name="SecApariencia" type="Label" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+text = "Apariencia"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="FilaIdioma" type="HBoxContainer" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
 
-[node name="Lbl" type="Label" parent="Panel/VBox/FilaIdioma"]
+[node name="Lbl" type="Label" parent="Panel/VBox/Scroll/Contenido/FilaIdioma"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Idioma"
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
-[node name="OpIdioma" type="OptionButton" parent="Panel/VBox/FilaIdioma"]
+[node name="OpIdioma" type="OptionButton" parent="Panel/VBox/Scroll/Contenido/FilaIdioma"]
 layout_mode = 2
 custom_minimum_size = Vector2(230, 54)
 
-[node name="FilaTema" type="HBoxContainer" parent="Panel/VBox"]
+[node name="FilaTema" type="HBoxContainer" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
 
-[node name="Lbl" type="Label" parent="Panel/VBox/FilaTema"]
+[node name="Lbl" type="Label" parent="Panel/VBox/Scroll/Contenido/FilaTema"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Tema"
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
-[node name="OpTema" type="OptionButton" parent="Panel/VBox/FilaTema"]
+[node name="OpTema" type="OptionButton" parent="Panel/VBox/Scroll/Contenido/FilaTema"]
 layout_mode = 2
 custom_minimum_size = Vector2(230, 54)
 
-[node name="FSonido" type="HBoxContainer" parent="Panel/VBox"]
+[node name="SecSonido" type="Label" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+text = "Sonido"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="FSonido" type="HBoxContainer" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
 
-[node name="Lbl" type="Label" parent="Panel/VBox/FSonido"]
+[node name="Lbl" type="Label" parent="Panel/VBox/Scroll/Contenido/FSonido"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Sonido"
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
-[node name="Chk" type="CheckButton" parent="Panel/VBox/FSonido"]
+[node name="Chk" type="CheckButton" parent="Panel/VBox/Scroll/Contenido/FSonido"]
 layout_mode = 2
 
-[node name="FVibracion" type="HBoxContainer" parent="Panel/VBox"]
+[node name="FVibracion" type="HBoxContainer" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
 
-[node name="Lbl" type="Label" parent="Panel/VBox/FVibracion"]
+[node name="Lbl" type="Label" parent="Panel/VBox/Scroll/Contenido/FVibracion"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Vibración"
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
-[node name="Chk" type="CheckButton" parent="Panel/VBox/FVibracion"]
+[node name="Chk" type="CheckButton" parent="Panel/VBox/Scroll/Contenido/FVibracion"]
 layout_mode = 2
 
-[node name="FEfectos" type="HBoxContainer" parent="Panel/VBox"]
+[node name="FEfectos" type="HBoxContainer" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
 
-[node name="Lbl" type="Label" parent="Panel/VBox/FEfectos"]
+[node name="Lbl" type="Label" parent="Panel/VBox/Scroll/Contenido/FEfectos"]
 layout_mode = 2
 size_flags_horizontal = 3
 text = "Efectos"
-theme_override_font_sizes/font_size = 26
+theme_override_font_sizes/font_size = 24
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 
-[node name="Chk" type="CheckButton" parent="Panel/VBox/FEfectos"]
+[node name="Chk" type="CheckButton" parent="Panel/VBox/Scroll/Contenido/FEfectos"]
 layout_mode = 2
 
-[node name="Reiniciar" type="Button" parent="Panel/VBox"]
+[node name="SecCuenta" type="Label" parent="Panel/VBox/Scroll/Contenido"]
 layout_mode = 2
-custom_minimum_size = Vector2(0, 60)
+text = "Cuenta"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="BtnGuardar" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
+text = "Guardar tu progreso"
+
+[node name="SecLegal" type="Label" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+text = "Legal"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="BtnTerminos" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+text = "Términos y condiciones"
+
+[node name="BtnPrivacidad" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+text = "Política de privacidad"
+
+[node name="SecAvanzado" type="Label" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+text = "Avanzado"
+theme_override_font_sizes/font_size = 16
+theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
+
+[node name="BtnServidor" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 52)
+text = "Servidor y conexión"
+
+[node name="Reiniciar" type="Button" parent="Panel/VBox/Scroll/Contenido"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 56)
 text = "Reiniciar progreso"
 
 [node name="Volver" type="Button" parent="Panel/VBox"]
@@ -126,6 +186,3 @@ size = Vector2i(400, 140)
 ok_button_text = "Sí"
 cancel_button_text = "No"
 dialog_text = "¿Borrar todo el progreso y volver al nivel 1?"
-
-
-

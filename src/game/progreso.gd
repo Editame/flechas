@@ -22,6 +22,10 @@ var estrellas_totales: int = 0   # suma de estrellas ganadas
 #   movimientos_optimos, menos_errores, estrellas, veces_jugado}
 var metricas: Dictionary = {}
 
+# --- Desafio diario: Dict<String "YYYY-MM-DD", Dict> ---
+# valor = {estrellas, movimientos, tiempo, errores, pistas}
+var diario: Dictionary = {}
+
 func _ready() -> void:
 	cargar()
 
@@ -42,6 +46,7 @@ func cargar() -> void:
 	perfectos = int(data.get("perfectos", 0))
 	estrellas_totales = int(data.get("estrellas_totales", 0))
 	metricas = data.get("metricas", {})
+	diario = data.get("diario", {})
 
 func guardar() -> void:
 	var data := {
@@ -52,6 +57,7 @@ func guardar() -> void:
 		"perfectos": perfectos,
 		"estrellas_totales": estrellas_totales,
 		"metricas": metricas,
+		"diario": diario,
 	}
 	var f := FileAccess.open(RUTA, FileAccess.WRITE)
 	if f == null:
@@ -60,18 +66,20 @@ func guardar() -> void:
 	f.close()
 
 ## Calcula estrellas (1-3) según errores y eficiencia de movimientos.
-static func calcular_estrellas(errores: int, movimientos: int, optimos: int) -> int:
-	if errores == 0 and movimientos <= optimos:
+static func calcular_estrellas(errores: int, _movimientos: int, optimos: int,
+		pistas: int, segundos: float) -> int:
+	var par := maxf(45.0, float(optimos) * 8.0)
+	if errores == 0 and pistas == 0 and segundos <= par:
 		return 3
-	if errores <= 2:
+	if errores <= 2 and pistas <= 1:
 		return 2
 	return 1
 
 ## Registra la finalización de un nivel con sus métricas y guarda.
 ## Devuelve las estrellas obtenidas.
 func completar_nivel(numero: int, tiempo_seg: float, movimientos: int,
-		optimos: int, errores: int) -> int:
-	var estrellas := calcular_estrellas(errores, movimientos, optimos)
+		optimos: int, errores: int, pistas: int = 0) -> int:
+	var estrellas := calcular_estrellas(errores, movimientos, optimos, pistas, tiempo_seg)
 
 	# Métrica por nivel: guarda el MEJOR resultado histórico.
 	var clave := str(numero)
@@ -92,6 +100,7 @@ func completar_nivel(numero: int, tiempo_seg: float, movimientos: int,
 		"movimientos_optimos": optimos,
 		"menos_errores": menos_err,
 		"estrellas": mejor_estrellas,
+		"pistas": pistas,
 		"veces_jugado": veces,
 	}
 
@@ -108,6 +117,32 @@ func completar_nivel(numero: int, tiempo_seg: float, movimientos: int,
 	guardar()
 	actualizado.emit()
 	return estrellas
+
+## Registra el desafio diario de una fecha (guarda el mejor resultado del dia).
+func completar_diario(fecha: String, tiempo_seg: float, movimientos: int,
+		optimos: int, errores: int, pistas: int = 0) -> int:
+	var estrellas := calcular_estrellas(errores, movimientos, optimos, pistas, tiempo_seg)
+	var prev: Dictionary = diario.get(fecha, {})
+	var mejor := estrellas
+	if not prev.is_empty():
+		mejor = maxi(estrellas, int(prev.get("estrellas", estrellas)))
+	diario[fecha] = {
+		"estrellas": mejor,
+		"movimientos": movimientos,
+		"tiempo": tiempo_seg,
+		"errores": errores,
+		"pistas": pistas,
+	}
+	guardar()
+	actualizado.emit()
+	return estrellas
+
+func diario_estrellas(fecha: String) -> int:
+	var d: Dictionary = diario.get(fecha, {})
+	return int(d.get("estrellas", 0))
+
+func diario_hecho(fecha: String) -> bool:
+	return diario.has(fecha)
 
 ## Resumen para pantallas de perfil/ranking local.
 func resumen() -> Dictionary:
@@ -128,5 +163,6 @@ func reiniciar_todo() -> void:
 	perfectos = 0
 	estrellas_totales = 0
 	metricas = {}
+	diario = {}
 	guardar()
 	actualizado.emit()

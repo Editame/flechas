@@ -1,0 +1,109 @@
+[gd_scene load_steps=2 format=3 uid="uid://bflechasdiario01"]
+
+[ext_resource type="Script" path="res://src/ui/desafio_diario.gd" id="1"]
+
+[node name="DesafioDiario" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="Fondo" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.102, 0.075, 0.176, 1)
+
+[node name="Header" type="HBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 20.0
+offset_right = -18.0
+offset_bottom = 80.0
+theme_override_constants/separation = 10
+
+[node name="Atras" type="Button" parent="Header"]
+custom_minimum_size = Vector2(60, 60)
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "‹"
+
+[node name="Titulo" type="Label" parent="Header"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Desafío diario"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 32
+theme_override_colors/font_color = Color(1, 0.956, 0.898, 1)
+
+[node name="Espacio" type="Control" parent="Header"]
+custom_minimum_size = Vector2(60, 0)
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_left = 18.0
+offset_top = 108.0
+offset_right = -18.0
+offset_bottom = 860.0
+
+[node name="VBox" type="VBoxContainer" parent="Panel"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="Mes" type="HBoxContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="BtnPrev" type="Button" parent="Panel/VBox/Mes"]
+custom_minimum_size = Vector2(58, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "‹"
+
+[node name="MesLabel" type="Label" parent="Panel/VBox/Mes"]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+text = "NOVIEMBRE 2026"
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 28
+
+[node name="BtnNext" type="Button" parent="Panel/VBox/Mes"]
+custom_minimum_size = Vector2(58, 58)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "›"
+
+[node name="Semana" type="GridContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 7
+
+[node name="Dias" type="GridContainer" parent="Panel/VBox"]
+layout_mode = 2
+theme_override_constants/h_separation = 6
+theme_override_constants/v_separation = 6
+columns = 7
+
+[node name="BtnHoy" type="Button" parent="Panel/VBox"]
+layout_mode = 2
+custom_minimum_size = Vector2(0, 76)
+text = "Jugar el de hoy"
+theme_override_font_sizes/font_size = 28
+
+[node name="Estado" type="Label" parent="Panel/VBox"]
+layout_mode = 2
+text = ""
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(1, 0.8, 0.4, 1)

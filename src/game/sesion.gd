@@ -10,6 +10,12 @@ var nivel_actual_id: String = ""
 ## Dificultad pedida para el nivel actual ("facil".."maximo").
 var dificultad_nivel: String = "medio"
 
+## Modo de la partida: "clasico" (avance de niveles) o "diario".
+var modo: String = "clasico"
+
+## Fecha del desafio diario ("YYYY-MM-DD") cuando modo == "diario".
+var fecha_diaria: String = ""
+
 ## Semilla con la que se genero el nivel actual (para reproducirlo).
 var semilla_nivel: int = 0
 

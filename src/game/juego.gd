@@ -33,6 +33,11 @@ var _movimientos: int = 0        # flechas sacadas con éxito (movimientos)
 var _errores: int = 0            # toques a flechas bloqueadas
 var _optimos: int = 0            # movimientos óptimos (= nº de flechas)
 var _tiempo_ini: int = 0         # ms al iniciar el nivel
+var _es_diario: bool = false     # modo desafío diario
+var _pistas: int = 0             # pistas manuales usadas
+var _sin_mover: float = 0.0      # segundos desde la última acción
+var _pista_id: int = -1          # flecha resaltada por la pista
+var _pista_hasta: int = 0        # ms hasta los que se muestra la pista
 
 # --- Pan / Zoom del lienzo ---
 var _zoom: float = 1.0
@@ -63,11 +68,13 @@ func _ready() -> void:
 	# Nivel inicial: viene de Sesion (elegido en el menú) o del progreso guardado.
 	if has_node("/root/Sesion"):
 		numero_nivel = get_node("/root/Sesion").nivel_actual
+		_es_diario = get_node("/root/Sesion").modo == "diario"
 	# Header.
 	$Header/Atras.pressed.connect(_ir_menu)
 	$Header/Deshacer.pressed.connect(deshacer)
 	$Header/Ajustes.pressed.connect(_abrir_modal)
 	$Header/VerWeb.pressed.connect(_abrir_en_web)
+	$Pista.pressed.connect(_dar_pista)
 	# Modal de opciones.
 	$Modal/Panel/VBox/Cerrar.pressed.connect(_cerrar_modal)
 	$Modal/Panel/VBox/Reiniciar.pressed.connect(func():
@@ -94,7 +101,10 @@ func _ready() -> void:
 			api.nivel_listo.connect(_cargar_nivel_desde_api)
 		if not api.error.is_connected(_on_error_api):
 			api.error.connect(_on_error_api)
-	cargar_nivel(numero_nivel)
+	if _es_diario:
+		_cargar_diario()
+	else:
+		cargar_nivel(numero_nivel)
 
 ## Abre en el navegador el jugador web con ESTA semilla y dificultad.
 ## Asi el nivel que se ve en el movil se puede inspeccionar en la web.
@@ -115,7 +125,7 @@ func _abrir_en_web() -> void:
 func _refrescar_tema() -> void:
 	var t := Config.tema
 	Tema.aplicar(t)
-	for ruta in ["Header/Atras", "Header/Deshacer", "Header/VerWeb", "Header/Ajustes"]:
+	for ruta in ["Header/Atras", "Header/Deshacer", "Header/VerWeb", "Header/Ajustes", "Pista"]:
 		if has_node(ruta):
 			Tema.estilizar_secundario(get_node(ruta), t)
 	if has_node("Modal/Panel"):
@@ -156,6 +166,9 @@ func cargar_nivel(numero: int) -> void:
 	_pan = Vector2.ZERO
 	_movimientos = 0
 	_errores = 0
+	_pistas = 0
+	_sin_mover = 0.0
+	_pista_id = -1
 	_tiempo_ini = Time.get_ticks_msec()
 	if has_node("Victoria"):
 		$Victoria.visible = false
@@ -171,6 +184,45 @@ func cargar_nivel(numero: int) -> void:
 		get_node("/root/API_Client").siguiente(dificultad)
 	else:
 		_on_error_api("API no disponible")
+
+## Carga el nivel del desafio diario (semilla = fecha, dificultad media).
+func _cargar_diario() -> void:
+	numero_nivel = 0
+	_resuelto = false
+	_historial.clear()
+	_marcadas.clear()
+	_zoom = 1.0
+	_pan = Vector2.ZERO
+	_movimientos = 0
+	_errores = 0
+	_pistas = 0
+	_sin_mover = 0.0
+	_pista_id = -1
+	_tiempo_ini = Time.get_ticks_msec()
+	$Victoria.visible = false
+	_label_titulo.text = I18n.t("desafio_diario")
+	if has_node("Dificultad"):
+		if has_node("/root/Sesion"):
+			$Dificultad.text = _fecha_legible(get_node("/root/Sesion").fecha_diaria)
+		else:
+			$Dificultad.text = ""
+	if _label_estado:
+		_label_estado.text = "Cargando..."
+	queue_redraw()
+	if has_node("/root/API_Client"):
+		var semilla := 0
+		if has_node("/root/Sesion"):
+			semilla = get_node("/root/Sesion").semilla_nivel
+		get_node("/root/API_Client").generar("medio", semilla)
+	else:
+		_on_error_api("API no disponible")
+
+func _fecha_legible(fecha: String) -> String:
+	var meses := ["ene", "feb", "mar", "abr", "may", "jun",
+			"jul", "ago", "sep", "oct", "nov", "dic"]
+	if fecha.length() == 10:
+		return "%d %s" % [int(fecha.substr(8, 2)), meses[int(fecha.substr(5, 2)) - 1]]
+	return fecha
 
 ## Regla de dificultad: 1-2 facil, 3-5 medio y de ahi en adelante aleatorio
 ## entre medio y maximo (con mas peso en dificil/super).
@@ -226,6 +278,9 @@ func _draw() -> void:
 	for ch in _choques:
 		var avance: float = sin(ch["t"] * PI) * ch["avance_max"]
 		_dibujar_flecha_saliendo({ "flecha": ch["flecha"], "avance": avance }, true)
+	# 5) Pista: flecha resaltada + su salida.
+	if _pista_id >= 0 and Time.get_ticks_msec() < _pista_hasta and tablero.flechas.has(_pista_id):
+		_dibujar_pista(tablero.flechas[_pista_id])
 
 func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> void:
 	# Dibuja la flecha como una LÍNEA que sigue su camino (con recodos) y una
@@ -482,6 +537,8 @@ func _procesar_toque(pos: Vector2) -> void:
 	if not tablero.esta_ocupada(celda):
 		return
 	var id: int = tablero.ocupacion[celda]
+	_sin_mover = 0.0
+	_pista_id = -1
 	# Guarda snapshot para deshacer.
 	_historial.append(tablero.clonar())
 	if tablero.puede_salir(id):
@@ -551,6 +608,57 @@ func _liberar_marcadas() -> void:
 				break   # reinicia el barrido (el diccionario cambió)
 	_evaluar_fin()
 
+## Resalta la siguiente flecha que puede salir (la primera de la solucion).
+## `auto` = pista automatica por inactividad (no cuenta como pista usada).
+func _dar_pista(auto: bool = false) -> void:
+	if tablero == null or _resuelto:
+		return
+	var elegida := -1
+	if has_node("/root/Sesion"):
+		var sol: Array = get_node("/root/Sesion").solucion_nivel
+		for id in sol:
+			if tablero.flechas.has(int(id)) and tablero.puede_salir(int(id)):
+				elegida = int(id)
+				break
+	if elegida < 0:
+		for id in tablero.flechas.keys():
+			if tablero.puede_salir(int(id)):
+				elegida = int(id)
+				break
+	if elegida < 0:
+		return
+	_pista_id = elegida
+	_pista_hasta = Time.get_ticks_msec() + 2600
+	_sin_mover = 0.0
+	if not auto:
+		_pistas += 1
+	queue_redraw()
+
+## Dibuja el resaltado de la pista: cuerpo brillante, anillo y salida punteada.
+func _dibujar_pista(flecha: Flecha) -> void:
+	var fase := Time.get_ticks_msec() / 120.0
+	var al := 0.35 + 0.30 * (0.5 + 0.5 * sin(fase))
+	var col := Color(0.24, 0.86, 0.59, al)
+	var grosor := maxf(3.0, _celda_px * 0.30)
+	var pts := PackedVector2Array()
+	for celda in flecha.celdas:
+		pts.append(_centro_celda(celda))
+	for i in range(pts.size() - 1):
+		draw_line(pts[i], pts[i + 1], col, grosor, true)
+	for p in pts:
+		draw_circle(p, grosor * 0.5, col)
+	var cabeza := pts[pts.size() - 1]
+	draw_arc(cabeza, _celda_px * 0.46, 0.0, TAU, 32, col,
+			maxf(2.5, _celda_px * 0.08), true)
+	if tablero.puede_salir(flecha.id):
+		var paso := flecha.direccion_salida()
+		var celda := flecha.cabeza() + paso
+		var radio := maxf(2.0, _celda_px * 0.07)
+		var col2 := Color(0.24, 0.86, 0.59, al * 0.9)
+		while tablero.es_jugable(celda):
+			draw_circle(_centro_celda(celda), radio, col2)
+			celda += paso
+
 ## Prepara la animación de una flecha deslizándose fuera del tablero.
 func _iniciar_animacion_salida(flecha: Flecha) -> void:
 	# La flecha sale SIGUIENDO SU CAMINO (como serpiente por un tubo): la cabeza
@@ -590,8 +698,12 @@ func _process(delta: float) -> void:
 			_fx[id] = resto
 		else:
 			_fx.erase(id)
-	if _animaciones.is_empty() and _choques.is_empty() and _fx.is_empty():
-		set_process(false)
+	# Pista automatica tras 10 s sin movimientos.
+	if tablero != null and not _resuelto:
+		_sin_mover += delta
+		if _sin_mover >= 10.0:
+			_dar_pista(true)
+			_sin_mover = 0.0
 	queue_redraw()
 
 func _evaluar_fin() -> void:
@@ -609,18 +721,30 @@ func _mostrar_victoria() -> void:
 	var tiempo := (Time.get_ticks_msec() - _tiempo_ini) / 1000.0
 	var estrellas := 3
 	if has_node("/root/Progreso"):
-		estrellas = get_node("/root/Progreso").completar_nivel(
-			numero_nivel, tiempo, _movimientos, _optimos, _errores)
+		var prog = get_node("/root/Progreso")
+		if _es_diario and has_node("/root/Sesion"):
+			estrellas = prog.completar_diario(
+				get_node("/root/Sesion").fecha_diaria, tiempo,
+				_movimientos, _optimos, _errores, _pistas)
+		else:
+			estrellas = prog.completar_nivel(
+				numero_nivel, tiempo, _movimientos, _optimos, _errores, _pistas)
 	# Mensaje celebratorio + estrellas + stats.
 	var mensajes := ["buen_trabajo", "impresionante", "maravilloso"]
 	$Victoria/VBox/Mensaje.text = I18n.t(mensajes[numero_nivel % mensajes.size()])
-	$Victoria/VBox/Sub.text = "%s %d" % [I18n.t("nivel_completado"), numero_nivel]
+	if _es_diario:
+		$Victoria/VBox/Sub.text = I18n.t("desafio_diario") + " · " + I18n.t("nivel_completado").to_lower()
+	else:
+		$Victoria/VBox/Sub.text = "%s %d" % [I18n.t("nivel_completado"), numero_nivel]
 	$Victoria/VBox/Estrellas.text = _texto_estrellas(estrellas)
-	$Victoria/VBox/Stats.text = "⏱ %.0fs   ·   %d %s   ·   %d ✗" % [
-		tiempo, _movimientos, I18n.t("movs"), _errores]
+	var extra := ""
+	if _pistas > 0:
+		extra = "   ·   %d %s" % [_pistas, I18n.t("pista").to_lower()]
+	$Victoria/VBox/Stats.text = "⏱ %.0fs   ·   %d %s   ·   %d ✗%s" % [
+		tiempo, _movimientos, I18n.t("movs"), _errores, extra]
 	$Victoria/VBox/Siguiente.text = I18n.t("siguiente_nivel")
 	$Victoria/VBox/Inicio.text = I18n.t("inicio")
-	$Victoria/VBox/Siguiente.visible = true   # modo infinito: siempre hay siguiente
+	$Victoria/VBox/Siguiente.visible = not _es_diario
 	var tw := create_tween()
 	tw.tween_interval(0.45)
 	tw.tween_callback(func(): $Victoria.visible = true)
@@ -676,7 +800,11 @@ func _cargar_nivel_desde_api(data: Dictionary) -> void:
 	var solucion: Array = data.get("solucion", [])
 	if has_node("/root/Sesion"):
 		var sesion := get_node("/root/Sesion")
-		sesion.fijar_nivel(numero_nivel, int(data.get("semilla", 0)), solucion)
+		if _es_diario:
+			sesion.semilla_nivel = int(data.get("semilla", sesion.semilla_nivel))
+			sesion.solucion_nivel = solucion
+		else:
+			sesion.fijar_nivel(numero_nivel, int(data.get("semilla", 0)), solucion)
 		sesion.dificultad_nivel = str(data.get("dificultad", sesion.dificultad_nivel))
 	_optimos = solucion.size()
 	_resuelto = false
@@ -686,11 +814,17 @@ func _cargar_nivel_desde_api(data: Dictionary) -> void:
 	_pan = Vector2.ZERO
 	_movimientos = 0
 	_errores = 0
+	_pistas = 0
+	_sin_mover = 0.0
+	_pista_id = -1
 	_tiempo_ini = Time.get_ticks_msec()
 	if has_node("Victoria"):
 		$Victoria.visible = false
 	if has_node("Dificultad"):
-		$Dificultad.text = I18n.t(str(data.get("dificultad", "medio")))
+		if _es_diario and has_node("/root/Sesion"):
+			$Dificultad.text = _fecha_legible(get_node("/root/Sesion").fecha_diaria)
+		else:
+			$Dificultad.text = I18n.t(str(data.get("dificultad", "medio")))
 	if _label_estado:
 		_label_estado.text = ""
 	print("[juego] nivel ", numero_nivel, " ", tablero.filas, "x", tablero.columnas, " flechas=", tablero.cantidad_flechas(), " dificultad=", str(data.get("dificultad", "?")))

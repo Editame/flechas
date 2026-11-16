@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bflechasjuego01"]
+[gd_scene load_steps=6 format=3 uid="uid://bflechasjuego01"]
 
 [ext_resource type="Script" path="res://src/game/juego.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/iconos/ver_web.svg" id="2"]
+[ext_resource type="Texture2D" path="res://assets/iconos/pista.svg" id="3"]
 
 [sub_resource type="StyleBoxFlat" id="icon_btn"]
 bg_color = Color(0.075, 0.102, 0.18, 1)
@@ -91,6 +92,19 @@ theme_override_styles/pressed = SubResource("icon_btn")
 theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
 theme_override_font_sizes/font_size = 26
 text = "⚙"
+
+[node name="Pista" type="Button" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 18.0
+offset_top = -92.0
+offset_right = 178.0
+offset_bottom = -28.0
+icon = ExtResource("3")
+text = "Pista"
+theme_override_font_sizes/font_size = 20
 
 [node name="Dificultad" type="Label" parent="."]
 layout_mode = 1

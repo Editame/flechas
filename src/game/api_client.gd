@@ -43,6 +43,11 @@ func siguiente(dificultad: String) -> void:
 func pool(dificultad: String, cantidad: int = 8) -> void:
 	_pedir("POST", "/pool", {"dificultad": dificultad, "cantidad": cantidad}, "pool")
 
+## Genera un nivel concreto por semilla (desafio diario, depuracion).
+func generar(dificultad: String, semilla: int) -> void:
+	_pedir("POST", "/generar",
+			{"dificultad": dificultad, "semilla": semilla, "guardar": false}, "generar")
+
 ## Comprueba la conexion contra el endpoint estandar /health.
 func health() -> void:
 	_pedir("GET", "/health", {}, "salud")
@@ -97,5 +102,11 @@ func _al_completar(resultado: int, codigo: int, _cabeceras: PackedStringArray,
 			error.emit("El pool vino vacio")
 			return
 		nivel_listo.emit(niveles[0])
+		return
+	if tipo == "generar":
+		if json.data is Dictionary and json.data.has("nivel"):
+			nivel_listo.emit(json.data["nivel"])
+		else:
+			error.emit("Respuesta de /generar no valida")
 		return
 	nivel_listo.emit(json.data)
