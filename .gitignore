@@ -24,3 +24,6 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Android Gradle build template and caches
+android/
