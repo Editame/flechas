@@ -8,6 +8,27 @@ func _ready() -> void:
 	$Header/Config.pressed.connect(_abrir_config)
 	$Header/Opciones.pressed.connect(_abrir_ajustes)
 	$Centro/Jugar.pressed.connect(_jugar)
+	if has_node("/root/Config"):
+		get_node("/root/Config").cambiado.connect(_refrescar_tema)
+	_refrescar_tema()
+
+## Aplica el tema visual elegido a la pantalla de inicio.
+func _refrescar_tema() -> void:
+	var t := Config.tema
+	Tema.aplicar(t)
+	if has_node("Fondo"):
+		$Fondo.color = Tema.fondo(t)
+	for ruta in ["Header/Config", "Header/Opciones"]:
+		if has_node(ruta):
+			Tema.estilizar_secundario(get_node(ruta), t)
+	if has_node("Titulo"):
+		$Titulo.add_theme_color_override("font_color", Tema.texto(t))
+	if has_node("Sub"):
+		$Sub.add_theme_color_override("font_color", Tema.texto_suave(t))
+	if has_node("Marca"):
+		$Marca.add_theme_color_override("font_color", Tema.texto(t))
+	if has_node("Version"):
+		$Version.add_theme_color_override("font_color", Tema.texto_suave(t))
 
 func _refrescar_textos() -> void:
 	$Titulo.text = "Flechas"

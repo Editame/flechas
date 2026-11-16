@@ -3,6 +3,8 @@ extends Control
 ## Ajustes de inicio: idioma, tema, sonido, vibración, efectos.
 
 func _ready() -> void:
+	Tema.aplicar(Config.tema)
+	$Fondo.color = Tema.fondo(Config.tema)
 	_refrescar_textos()
 	$Panel/VBox/Volver.pressed.connect(_volver)
 	$Panel/VBox/FilaIdioma/OpIdioma.item_selected.connect(_cambiar_idioma)
@@ -39,8 +41,9 @@ func _refrescar_textos() -> void:
 
 	var op_tema: OptionButton = $Panel/VBox/FilaTema/OpTema
 	op_tema.clear()
-	op_tema.add_item(I18n.t("tema_azul"), Config.Tema.AZUL_OSCURO)
-	op_tema.add_item(I18n.t("tema_colores"), Config.Tema.COLORES)
+	op_tema.add_item(I18n.t("tema_neon"), 0)
+	op_tema.add_item(I18n.t("tema_cristal"), 1)
+	op_tema.add_item(I18n.t("tema_pizarra"), 2)
 	op_tema.select(Config.tema)
 
 	$Panel/VBox/FSonido/Chk.button_pressed = Config.sonido
@@ -53,6 +56,7 @@ func _cambiar_idioma(idx: int) -> void:
 
 func _cambiar_tema(idx: int) -> void:
 	Config.set_tema(idx)
+	$Fondo.color = Tema.fondo(Config.tema)
 
 func _volver() -> void:
 	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")

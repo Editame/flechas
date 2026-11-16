@@ -8,10 +8,10 @@ const RUTA := "user://config.cfg"
 signal cambiado()   # se emite al cambiar idioma o tema
 
 enum Idioma { ES, EN }
-enum Tema { AZUL_OSCURO, COLORES }
+enum TemaApp { NEON, CRISTAL, PIZARRA }
 
 var idioma: int = Idioma.ES
-var tema: int = Tema.AZUL_OSCURO
+var tema: int = TemaApp.NEON
 var sonido: bool = true
 var vibracion: bool = true
 var efectos: bool = true
@@ -23,7 +23,7 @@ func cargar() -> void:
 	var cf := ConfigFile.new()
 	if cf.load(RUTA) == OK:
 		idioma = int(cf.get_value("pref", "idioma", Idioma.ES))
-		tema = int(cf.get_value("pref", "tema", Tema.AZUL_OSCURO))
+		tema = Tema.normalizar(int(cf.get_value("pref", "tema", TemaApp.NEON)))
 		sonido = bool(cf.get_value("pref", "sonido", true))
 		vibracion = bool(cf.get_value("pref", "vibracion", true))
 		efectos = bool(cf.get_value("pref", "efectos", true))
@@ -43,7 +43,8 @@ func set_idioma(v: int) -> void:
 	cambiado.emit()
 
 func set_tema(v: int) -> void:
-	tema = v
+	tema = Tema.normalizar(v)
+	Tema.aplicar(tema)
 	guardar()
 	cambiado.emit()
 

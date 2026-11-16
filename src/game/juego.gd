@@ -85,11 +85,12 @@ func _ready() -> void:
 	# Overlay de victoria.
 	$Victoria/VBox/Siguiente.pressed.connect(_siguiente_nivel)
 	$Victoria/VBox/Inicio.pressed.connect(_ir_menu)
-	if has_node("PanelSemilla/Fila/CopiarSemilla"):
-		$PanelSemilla/Fila/CopiarSemilla.pressed.connect(_copiar_semilla)
+	if has_node("PanelSemilla/Fila/VerWeb"):
+		$PanelSemilla/Fila/VerWeb.pressed.connect(_abrir_en_web)
 	resized.connect(queue_redraw)
 	if has_node("/root/Config"):
-		get_node("/root/Config").cambiado.connect(queue_redraw)
+		get_node("/root/Config").cambiado.connect(_refrescar_tema)
+	_refrescar_tema()
 	if has_node("/root/API_Client"):
 		var api := get_node("/root/API_Client")
 		if not api.nivel_listo.is_connected(_cargar_nivel_desde_api):
@@ -98,17 +99,42 @@ func _ready() -> void:
 			api.error.connect(_on_error_api)
 	cargar_nivel(numero_nivel)
 
-## Copia la semilla del nivel al portapapeles (util en pruebas desde el movil).
-func _copiar_semilla() -> void:
+## Abre en el navegador el jugador web con ESTA semilla y dificultad.
+## Asi el nivel que se ve en el movil se puede inspeccionar en la web.
+func _abrir_en_web() -> void:
 	var semilla := 0
+	var dificultad := "medio"
 	if has_node("/root/Sesion"):
 		semilla = get_node("/root/Sesion").semilla_nivel
-	DisplayServer.clipboard_set(str(semilla))
-	print("[juego] semilla copiada: ", semilla)
-	if has_node("PanelSemilla/Fila/CopiarSemilla"):
-		$PanelSemilla/Fila/CopiarSemilla.text = "Copiada " + str(semilla)
-		await get_tree().create_timer(1.5).timeout
-		$PanelSemilla/Fila/CopiarSemilla.text = "Copiar semilla"
+		dificultad = get_node("/root/Sesion").dificultad_nivel
+	var base := "http://127.0.0.1:8077/flechas/v1"
+	if has_node("/root/API_Client"):
+		base = get_node("/root/API_Client").url_base()
+	var url := "%s/static/?semilla=%d&dificultad=%s" % [base, semilla, dificultad]
+	print("[juego] abrir en web: ", url)
+	OS.shell_open(url)
+
+## Aplica el tema elegido a toda la escena (chrome + colores) y redibuja.
+func _refrescar_tema() -> void:
+	var t := Config.tema
+	Tema.aplicar(t)
+	for ruta in ["Header/Atras", "Header/Deshacer", "Header/Ajustes",
+			"PanelSemilla/Fila/VerWeb"]:
+		if has_node(ruta):
+			Tema.estilizar_secundario(get_node(ruta), t)
+	if has_node("Modal/Panel"):
+		$Modal/Panel.add_theme_stylebox_override("panel", Tema.caja_panel(t))
+	if has_node("Dificultad"):
+		$Dificultad.add_theme_color_override("font_color", Tema.texto_suave(t))
+	if has_node("PanelSemilla/Fila/Semilla"):
+		$PanelSemilla/Fila/Semilla.add_theme_color_override("font_color", Tema.texto(t))
+	if has_node("Debug"):
+		$Debug.add_theme_color_override("font_color", Tema.texto_suave(t))
+	if has_node("Estado"):
+		$Estado.add_theme_color_override("font_color", Tema.texto(t))
+	if has_node("Victoria/VBox/Mensaje"):
+		$Victoria/VBox/Mensaje.add_theme_color_override("font_color", Tema.texto(t))
+	queue_redraw()
 
 func _ir_menu() -> void:
 	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
@@ -207,11 +233,27 @@ func _draw() -> void:
 	if tablero == null:
 		return
 	_calcular_geometria()
-	# 1) Matriz de puntos de fondo (dot grid) según el tema.
-	var col_punto := Tema.color_punto(Config.tema)
+	var t := Config.tema
+	# 0) Fondo del tema a pantalla completa.
+	draw_rect(Rect2(Vector2.ZERO, size), Tema.fondo(t), true)
+	# 1) Tablero: fondo, malla (según tema) y puntos.
+	var o := _origen_efectivo()
+	var w: float = tablero.columnas * _celda_px
+	var h: float = tablero.filas * _celda_px
+	draw_rect(Rect2(o, Vector2(w, h)), Tema.tablero(t), true)
+	if Tema.usa_malla(t):
+		var col_malla := Tema.color_malla(t)
+		for r in range(tablero.filas + 1):
+			var y := o.y + float(r) * _celda_px
+			draw_line(Vector2(o.x, y), Vector2(o.x + w, y), col_malla, 1.0)
+		for c in range(tablero.columnas + 1):
+			var x := o.x + float(c) * _celda_px
+			draw_line(Vector2(x, o.y), Vector2(x, o.y + h), col_malla, 1.0)
+	var col_punto := Tema.color_punto(t)
+	var radio := maxf(1.6, _celda_px * Tema.radio_punto(t))
 	for celda in tablero.jugables.keys():
 		var centro := _centro_celda(celda)
-		draw_circle(centro, maxf(2.0, _celda_px * 0.06), col_punto)
+		draw_rect(Rect2(centro - Vector2(radio, radio), Vector2(radio * 2.0, radio * 2.0)), col_punto)
 	# 2) Flechas encima. Las que están en CHOQUE se dibujan aparte (deslizando).
 	var en_choque := {}
 	for ch in _choques:
@@ -230,10 +272,11 @@ func _draw() -> void:
 func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> void:
 	# Dibuja la flecha como una LÍNEA que sigue su camino (con recodos) y una
 	# punta al final (cabeza). Color según tema; roja si está marcada.
-	var color := Tema.color_flecha(Config.tema, flecha.id)
+	var t := Config.tema
+	var color := Tema.color_flecha(t, flecha.id)
 	if _marcadas.has(flecha.id):
 		color = Tema.ROJO_COLISION
-	var grosor: float = maxf(2.0, _celda_px * 0.10)   # grosor intermedio
+	var grosor: float = maxf(2.4, _celda_px * Tema.grosor(t))
 
 	# Puntos del camino en pantalla (centro de cada celda) + desplazamiento.
 	var pts: PackedVector2Array = PackedVector2Array()
@@ -246,22 +289,20 @@ func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> 
 	var dir := Vector2(ds.y, ds.x)
 	if dir.length() > 0.01:
 		dir = dir.normalized()
-	var perp := Vector2(-dir.y, dir.x)
-	var punta := pts[pts.size() - 1]
-	var largo := _celda_px * 0.55
-	var ancho := _celda_px * 0.26
-	var base := punta - dir * largo
-	# 1) Cuerpo hasta la base de la punta (no invade la celda siguiente).
-	for k in range(pts.size() - 2):
-		draw_line(pts[k], pts[k + 1], color, grosor, true)
-	if pts.size() >= 2:
-		draw_line(pts[pts.size() - 2], base, color, grosor, true)
-	else:
-		draw_line(pts[0], base, color, grosor, true)
+	# 0) Halo suave detrás del cuerpo (según tema).
+	var h := Tema.halo(t)
+	if h > 0.0:
+		var hc := Color(color.r, color.g, color.b, h)
+		var hg := grosor * 1.9
+		for k in range(pts.size() - 1):
+			draw_line(pts[k], pts[k + 1], hc, hg, true)
+	# 1) Cuerpo: todo el camino, con codos redondeados.
 	for k in range(pts.size() - 1):
-		draw_circle(pts[k], grosor * 0.5, color)
-	# 2) Punta: vertice en el punto, base hacia el cuerpo.
-	draw_colored_polygon(PackedVector2Array([punta, base + perp * ancho, base - perp * ancho]), color)
+		draw_line(pts[k], pts[k + 1], color, grosor, true)
+	for p in pts:
+		draw_circle(p, grosor * 0.5, color)
+	# 2) Punta centrada en el ultimo punto (como la web).
+	_dibujar_punta(pts[pts.size() - 1], dir, color)
 
 ## Dibuja una flecha en animación de salida, deslizándose por SU PROPIO CAMINO.
 ## Construye un "riel" en coords de celda = camino (cola->cabeza) + extensión
@@ -271,7 +312,7 @@ func _dibujar_flecha_saliendo(a: Dictionary, rojo: bool = false) -> void:
 	var flecha: Flecha = a["flecha"]
 	var avance: float = a["avance"]
 	var color := Tema.ROJO_COLISION if rojo else Tema.color_flecha(Config.tema, flecha.id)
-	var grosor: float = maxf(2.0, _celda_px * 0.10)
+	var grosor: float = maxf(2.4, _celda_px * Tema.grosor(Config.tema))
 
 	# Riel en coords de celda: las celdas del camino + extensión recta.
 	var ds := flecha.direccion_salida()   # (dfila, dcol)
@@ -309,12 +350,20 @@ func _dibujar_flecha_saliendo(a: Dictionary, rojo: bool = false) -> void:
 	var dir := Vector2(ds.y, ds.x)
 	if dir.length() > 0.01:
 		dir = dir.normalized()
-	var perp := Vector2(-dir.y, dir.x)
-	var cabeza := pantalla[pantalla.size() - 1]
-	var vertice := cabeza + dir * (_celda_px * 0.42)
-	var ancho := _celda_px * 0.24
-	draw_colored_polygon(PackedVector2Array([
-		vertice, cabeza + perp * ancho, cabeza - perp * ancho]), color)
+	_dibujar_punta(pantalla[pantalla.size() - 1], dir, color)
+
+## Punta triangular centrada en `punta`, con el vertice medio paso por delante
+## (igual que el jugador web): asi la flecha "apunta" al punto sin invadir la
+## celda siguiente.
+func _dibujar_punta(punta: Vector2, dir: Vector2, color: Color) -> void:
+	if dir.length() < 0.01:
+		return
+	dir = dir.normalized()
+	var t: float = maxf(3.0, _celda_px * 0.34)
+	var vertice := punta + dir * t
+	var a1 := punta + dir.rotated(2.5) * t
+	var a2 := punta + dir.rotated(-2.5) * t
+	draw_colored_polygon(PackedVector2Array([vertice, a1, a2]), color)
 
 ## Dado un riel (lista de celdas Vector2(fila,col)) y una distancia `d` en
 ## unidades de celda a lo largo del riel, devuelve el punto en PANTALLA.
@@ -636,7 +685,7 @@ func _cargar_nivel_desde_api(data: Dictionary) -> void:
 	tablero = Tablero.new(int(data["filas"]), int(data["columnas"]))
 	for celda in data["forma"]:
 		tablero.agregar_celda(Vector2i(int(celda[0]), int(celda[1])))
-	var paleta := Tema.paleta()
+	var paleta := Tema.paleta(Config.tema)
 	var i := 0
 	for fd in data["flechas"]:
 		var celdas: Array[Vector2i] = []
