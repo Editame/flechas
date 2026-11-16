@@ -25,6 +25,7 @@ var _resuelto := false
 # Animaciones de salida en curso. Cada una: {flecha, dir, offset_px, dist_max}
 var _animaciones: Array = []
 var _choques: Array = []         # animaciones de choque (rebote) de bloqueadas
+var _fx: Dictionary = {}         # id -> segundos restantes del efecto de bloqueo
 var _marcadas: Dictionary = {}   # ids de flechas marcadas (rojas): quieren salir
 
 # --- Métricas del nivel actual ---
@@ -246,6 +247,14 @@ func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> 
 	var dir := Vector2(ds.y, ds.x)
 	if dir.length() > 0.01:
 		dir = dir.normalized()
+	# Efecto de bloqueo: sacudida perpendicular + anillos en la punta.
+	var fx := float(_fx.get(flecha.id, 0.0))
+	if fx > 0.0 and pts.size() >= 2:
+		var perp := Vector2(-dir.y, dir.x)
+		var k := clampf(fx / 0.45, 0.0, 1.0)
+		var desf := perp * sin(fx * 55.0) * (_celda_px * 0.07) * k
+		for i in range(pts.size()):
+			pts[i] += desf
 	# 0) Halo suave detrás del cuerpo (según tema).
 	var h := Tema.halo(t)
 	if h > 0.0:
@@ -260,6 +269,15 @@ func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> 
 		draw_circle(p, grosor * 0.5, color)
 	# 2) Punta centrada en el ultimo punto (como la web).
 	_dibujar_punta(pts[pts.size() - 1], dir, color)
+	# 3) Anillos del efecto de bloqueo.
+	if fx > 0.0:
+		var avance := 1.0 - clampf(fx / 0.45, 0.0, 1.0)
+		for n in range(2):
+			var kk := clampf(avance - 0.22 * float(n), 0.0, 1.0)
+			var radio := _celda_px * (0.12 + 0.62 * kk)
+			var al := (1.0 - kk) * 0.65
+			draw_arc(pts[pts.size() - 1], radio, 0.0, TAU, 28,
+					Color(1.0, 0.36, 0.45, al), maxf(2.0, _celda_px * 0.05), true)
 
 ## Dibuja una flecha en animación de salida, deslizándose por SU PROPIO CAMINO.
 ## Construye un "riel" en coords de celda = camino (cola->cabeza) + extensión
@@ -479,6 +497,7 @@ func _procesar_toque(pos: Vector2) -> void:
 		if not _marcadas.has(id):
 			_errores += 1        # cuenta el error solo la primera vez
 		_marcadas[id] = true
+		_fx[id] = 0.45          # efecto de bloqueo (sacudida + anillos)
 		if has_node("/root/Audio"):
 			get_node("/root/Audio").colision()   # sonido + vibración (respeta config)
 		_iniciar_choque(id)
@@ -564,7 +583,14 @@ func _process(delta: float) -> void:
 		if ch["t"] < 1.0:
 			choques_vivos.append(ch)
 	_choques = choques_vivos
-	if _animaciones.is_empty() and _choques.is_empty():
+	# Efecto de bloqueo (sacudida + anillos rojos).
+	for id in _fx.keys():
+		var resto: float = float(_fx[id]) - delta
+		if resto > 0.0:
+			_fx[id] = resto
+		else:
+			_fx.erase(id)
+	if _animaciones.is_empty() and _choques.is_empty() and _fx.is_empty():
 		set_process(false)
 	queue_redraw()
 
