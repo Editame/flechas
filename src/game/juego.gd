@@ -224,10 +224,6 @@ func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> 
 	for celda in flecha.celdas:
 		pts.append(_centro_celda(celda) + desplazamiento)
 
-	# Extiende la cola un poco hacia afuera (para que arranque en el borde).
-	if pts.size() >= 2:
-		var d0 := (pts[0] - pts[1]).normalized()
-		pts[0] = pts[0] + d0 * (_celda_px * 0.28)
 
 	# Dirección de salida (para la punta).
 	var ds := flecha.direccion_salida()
@@ -235,20 +231,21 @@ func _dibujar_flecha(flecha: Flecha, desplazamiento: Vector2 = Vector2.ZERO) -> 
 	if dir.length() > 0.01:
 		dir = dir.normalized()
 	var perp := Vector2(-dir.y, dir.x)
-	var cabeza := pts[pts.size() - 1]
-	# La punta arranca DESDE la celda cabeza (unida al cuerpo, sin hueco).
-	var vertice := cabeza + dir * (_celda_px * 0.42)
-	var base := cabeza                       # base de la punta = centro de la celda
-	# 1) Cuerpo: recorre el camino hasta la BASE de la punta (continuo).
-	for i in range(pts.size() - 1):
-		draw_line(pts[i], pts[i + 1], color, grosor, true)
-	for p in pts:
-		draw_circle(p, grosor * 0.5, color)
-	# 2) Punta triangular UNIDA al cuerpo (su base está en la celda cabeza).
-	var ancho := _celda_px * 0.24
-	var a1 := base + perp * ancho
-	var a2 := base - perp * ancho
-	draw_colored_polygon(PackedVector2Array([vertice, a1, a2]), color)
+	var punta := pts[pts.size() - 1]
+	var largo := _celda_px * 0.55
+	var ancho := _celda_px * 0.26
+	var base := punta - dir * largo
+	# 1) Cuerpo hasta la base de la punta (no invade la celda siguiente).
+	for k in range(pts.size() - 2):
+		draw_line(pts[k], pts[k + 1], color, grosor, true)
+	if pts.size() >= 2:
+		draw_line(pts[pts.size() - 2], base, color, grosor, true)
+	else:
+		draw_line(pts[0], base, color, grosor, true)
+	for k in range(pts.size() - 1):
+		draw_circle(pts[k], grosor * 0.5, color)
+	# 2) Punta: vertice en el punto, base hacia el cuerpo.
+	draw_colored_polygon(PackedVector2Array([punta, base + perp * ancho, base - perp * ancho]), color)
 
 ## Dibuja una flecha en animación de salida, deslizándose por SU PROPIO CAMINO.
 ## Construye un "riel" en coords de celda = camino (cola->cabeza) + extensión
