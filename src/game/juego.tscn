@@ -122,6 +122,33 @@ vertical_alignment = 2
 theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(0.576, 0.627, 0.741, 1)
 
+[node name="PanelSemilla" type="PanelContainer" parent="."]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 12.0
+offset_top = -318.0
+offset_right = 706.0
+offset_bottom = -246.0
+
+[node name="Fila" type="HBoxContainer" parent="PanelSemilla"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="Semilla" type="Label" parent="PanelSemilla/Fila"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "semilla"
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 34
+theme_override_colors/font_color = Color(0.91, 0.93, 0.97, 1)
+
+[node name="CopiarSemilla" type="Button" parent="PanelSemilla/Fila"]
+layout_mode = 2
+text = "Copiar semilla"
+theme_override_font_sizes/font_size = 22
+
 [node name="Estado" type="Label" parent="."]
 layout_mode = 1
 anchors_preset = 10
@@ -290,5 +317,3 @@ text = "Siguiente nivel"
 layout_mode = 2
 custom_minimum_size = Vector2(0, 68)
 text = "Inicio"
-
-

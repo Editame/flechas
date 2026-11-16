@@ -85,6 +85,8 @@ func _ready() -> void:
 	# Overlay de victoria.
 	$Victoria/VBox/Siguiente.pressed.connect(_siguiente_nivel)
 	$Victoria/VBox/Inicio.pressed.connect(_ir_menu)
+	if has_node("PanelSemilla/Fila/CopiarSemilla"):
+		$PanelSemilla/Fila/CopiarSemilla.pressed.connect(_copiar_semilla)
 	resized.connect(queue_redraw)
 	if has_node("/root/Config"):
 		get_node("/root/Config").cambiado.connect(queue_redraw)
@@ -95,6 +97,18 @@ func _ready() -> void:
 		if not api.error.is_connected(_on_error_api):
 			api.error.connect(_on_error_api)
 	cargar_nivel(numero_nivel)
+
+## Copia la semilla del nivel al portapapeles (util en pruebas desde el movil).
+func _copiar_semilla() -> void:
+	var semilla := 0
+	if has_node("/root/Sesion"):
+		semilla = get_node("/root/Sesion").semilla_nivel
+	DisplayServer.clipboard_set(str(semilla))
+	print("[juego] semilla copiada: ", semilla)
+	if has_node("PanelSemilla/Fila/CopiarSemilla"):
+		$PanelSemilla/Fila/CopiarSemilla.text = "Copiada " + str(semilla)
+		await get_tree().create_timer(1.5).timeout
+		$PanelSemilla/Fila/CopiarSemilla.text = "Copiar semilla"
 
 func _ir_menu() -> void:
 	get_tree().change_scene_to_file("res://src/ui/main_menu.tscn")
@@ -171,6 +185,8 @@ func _actualizar_debug() -> void:
 		var sol: Array = get_node("/root/Sesion").solucion_nivel
 		if not sol.is_empty():
 			sol_ok = Metricas.verificar_solucion(tablero, sol)
+	if has_node("PanelSemilla/Fila/Semilla"):
+		$PanelSemilla/Fila/Semilla.text = "semilla %d" % semilla
 	$Debug.text = "\n".join([
 		Version.etiqueta(),
 		"Nv %d  semilla %d" % [numero_nivel, semilla],
@@ -713,6 +729,10 @@ func _calcular_geometria() -> void:
 	var margen := 24.0
 	var reserva_arriba := 170.0   # header + dificultad + estado
 	var reserva_abajo := 30.0
+	# Si el panel de semilla está visible (modo desarrollo), le reservamos su
+	# franja para que no tape las últimas filas del tablero.
+	if has_node("PanelSemilla") and $PanelSemilla.visible:
+		reserva_abajo = 340.0
 	var ancho_disp: float = area.x - margen * 2.0
 	var alto_disp: float = area.y - reserva_arriba - reserva_abajo
 	# Celda BASE (zoom 1): encaja TODO el tablero (vista general inicial).
