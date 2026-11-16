@@ -1,0 +1,53 @@
+[gd_scene load_steps=2 format=3 uid="uid://config_server"]
+
+[ext_resource type="Script" path="res://src/ui/config_server.gd" id="1.config"]
+
+[node name="VBoxContainer" type="VBoxContainer"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1.config")
+theme_override_constants/separation = 12
+
+[node name="Titulo" type="Label" parent="."]
+text = "Configuración del Servidor"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 32
+
+[node name="Subtitulo" type="Label" parent="."]
+text = "URL del servidor de generación de niveles"
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 18
+theme_override_colors/font_color = Color(0.5, 0.5, 0.5, 1)
+
+[node name="VBox" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 9
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -280.0
+offset_top = -120.0
+offset_right = 280.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 12
+
+[node name="LabelURL" type="Label" parent="VBox"]
+text = "http://127.0.0.1:8000"
+
+[node name="LineEditURL" type="LineEdit" parent="VBox"]
+placeholder_text = "URL del servidor (ej: http://localhost:8000)"
+
+[node name="Botones" type="HBoxContainer" parent="VBox"]
+layout_mode = 1
+theme_override_constants/separation = 8
+
+[node name="BtnGuardar" type="Button" parent="Botones"]
+text = "💾 Guardar"
+
+[node name="BtnCancelar" type="Button" parent="Botones"]
+text = "✖ Cancelar"
