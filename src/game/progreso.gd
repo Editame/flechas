@@ -144,6 +144,26 @@ func diario_estrellas(fecha: String) -> int:
 func diario_hecho(fecha: String) -> bool:
 	return diario.has(fecha)
 
+## Primera fecha del año actual sin completar (YYYY-MM-DD), o "" si está todo.
+func siguiente_diario() -> String:
+	var hoy := Time.get_date_dict_from_system()
+	var anio := int(hoy["year"])
+	for mes in range(1, 13):
+		var dias := 31
+		match mes:
+			2:
+				dias = 29 if _bisiesto(anio) else 28
+			4, 6, 9, 11:
+				dias = 30
+		for dia in range(1, dias + 1):
+			var f := "%04d-%02d-%02d" % [anio, mes, dia]
+			if not diario.has(f):
+				return f
+	return ""
+
+func _bisiesto(anio: int) -> bool:
+	return (anio % 4 == 0 and anio % 100 != 0) or anio % 400 == 0
+
 ## Resumen para pantallas de perfil/ranking local.
 func resumen() -> Dictionary:
 	return {

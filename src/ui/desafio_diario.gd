@@ -1,7 +1,7 @@
 extends Control
 
-## Desafio diario: calendario del mes. Cada dia tiene un nivel aleatorio
-## (semilla = fecha) y solo el dia de hoy se puede jugar.
+## Desafio diario: un nivel por cada dia del año. Se juega EN ORDEN: solo se
+## desbloquea la primera fecha sin completar (aunque sea de enero).
 
 const FONDO := Color("#1a1330")
 const PANEL := Color("#241a3d")
@@ -13,6 +13,8 @@ const OK := Color("#3ddc97")
 
 const MESES := ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO",
 		"JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"]
+const MESES_CORTOS := ["ene", "feb", "mar", "abr", "may", "jun",
+		"jul", "ago", "sep", "oct", "nov", "dic"]
 const DIAS := ["L", "M", "X", "J", "V", "S", "D"]
 
 var _anio: int = 2026
@@ -22,6 +24,10 @@ func _ready() -> void:
 	var hoy := Time.get_date_dict_from_system()
 	_anio = int(hoy["year"])
 	_mes = int(hoy["month"])
+	var sig := _siguiente()
+	if sig != "":
+		_anio = int(sig.substr(0, 4))
+		_mes = int(sig.substr(5, 2))
 	$Fondo.color = FONDO
 	_estilizar()
 	$Header/Atras.pressed.connect(_volver)
@@ -41,10 +47,9 @@ func _estilizar() -> void:
 	sb.shadow_size = 18
 	$Panel.add_theme_stylebox_override("panel", sb)
 	for b in [$Header/Atras, $Panel/VBox/Mes/BtnPrev, $Panel/VBox/Mes/BtnNext]:
-		(_estilizar_boton(b, PANEL2, PANEL, TEXTO, 18))
+		_estilizar_boton(b, PANEL2, PANEL, TEXTO, 18)
 	$Panel/VBox/BtnHoy.add_theme_stylebox_override("normal", _caja(ORO, ORO, 22))
-	var hover := _caja(ORO.lightened(0.12), ORO, 22)
-	$Panel/VBox/BtnHoy.add_theme_stylebox_override("hover", hover)
+	$Panel/VBox/BtnHoy.add_theme_stylebox_override("hover", _caja(ORO.lightened(0.12), ORO, 22))
 	$Panel/VBox/BtnHoy.add_theme_stylebox_override("pressed", _caja(ORO.darkened(0.12), ORO, 22))
 	$Panel/VBox/BtnHoy.add_theme_color_override("font_color", Color("#241a3d"))
 	$Panel/VBox/BtnHoy.add_theme_color_override("font_hover_color", Color("#241a3d"))
@@ -74,12 +79,10 @@ func _caja(fondo: Color, borde: Color, radio: int) -> StyleBoxFlat:
 	return sb
 
 func _construir() -> void:
-	$Panel/VBox/Mes/MesLabel.text = "%s %d" % [MESES[_mes - 1], _anio]
+	var sig := _siguiente()
 	var hoy := Time.get_date_dict_from_system()
 	var fecha_hoy := _fecha(int(hoy["year"]), int(hoy["month"]), int(hoy["day"]))
-	var actual := _anio == int(hoy["year"]) and _mes == int(hoy["month"])
-	$Panel/VBox/Mes/BtnNext.disabled = actual
-
+	$Panel/VBox/Mes/MesLabel.text = "%s %d" % [MESES[_mes - 1], _anio]
 	for hijo in $Panel/VBox/Semana.get_children():
 		hijo.free()
 	for hijo in $Panel/VBox/Dias.get_children():
@@ -100,23 +103,22 @@ func _construir() -> void:
 	for i in offset:
 		var hueco := Control.new()
 		hueco.custom_minimum_size = Vector2(84, 62)
+		hueco.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		$Panel/VBox/Dias.add_child(hueco)
 
 	var total := _dias_del_mes(_anio, _mes)
 	for dia in range(1, total + 1):
 		var fecha := _fecha(_anio, _mes, dia)
 		var hecho := false
-		var estrellas := 0
 		if has_node("/root/Progreso"):
 			hecho = get_node("/root/Progreso").diario_hecho(fecha)
-			estrellas = get_node("/root/Progreso").diario_estrellas(fecha)
 		var b := Button.new()
 		b.custom_minimum_size = Vector2(84, 62)
 		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		b.focus_mode = Control.FOCUS_NONE
 		b.text = "%d ★" % dia if hecho else str(dia)
 		b.add_theme_font_size_override("font_size", 20 if hecho else 22)
-		if fecha == fecha_hoy:
+		if fecha == sig:
 			b.add_theme_stylebox_override("normal", _caja(ORO, ORO, 16))
 			b.add_theme_stylebox_override("hover", _caja(ORO.lightened(0.12), ORO, 16))
 			b.add_theme_stylebox_override("pressed", _caja(ORO.darkened(0.12), ORO, 16))
@@ -133,40 +135,40 @@ func _construir() -> void:
 			b.disabled = true
 		$Panel/VBox/Dias.add_child(b)
 
-	var hechas := 0
+	if sig == "":
+		$Panel/VBox/Estado.text = "Año completado"
+		$Panel/VBox/BtnHoy.text = "Año completado"
+		$Panel/VBox/BtnHoy.disabled = true
+	else:
+		$Panel/VBox/Estado.text = "Siguiente: %s" % _fecha_corta(sig)
+		$Panel/VBox/BtnHoy.disabled = false
+		if sig == fecha_hoy:
+			$Panel/VBox/BtnHoy.text = "Jugar el de hoy"
+		else:
+			$Panel/VBox/BtnHoy.text = "Jugar el día %s" % _fecha_corta(sig)
+
+func _siguiente() -> String:
 	if has_node("/root/Progreso"):
-		hechas = get_node("/root/Progreso").diario_estrellas(fecha_hoy)
-	$Panel/VBox/Estado.text = ("Hoy: %d/3 estrellas" % hechas) if hechas > 0 \
-			else "Un nivel nuevo cada día"
-	$Panel/VBox/BtnHoy.text = "Repetir el de hoy" if hechas > 0 else "Jugar el de hoy"
+		return get_node("/root/Progreso").siguiente_diario()
+	return ""
 
 func _cambiar_mes(delta: int) -> void:
 	var mes := _mes + delta
-	var anio := _anio
-	if mes < 1:
-		mes = 12
-		anio -= 1
-	elif mes > 12:
-		mes = 1
-		anio += 1
-	var hoy := Time.get_date_dict_from_system()
-	if anio * 12 + mes > int(hoy["year"]) * 12 + int(hoy["month"]):
+	if mes < 1 or mes > 12:
 		return
-	_anio = anio
 	_mes = mes
 	_construir()
 
 func _jugar() -> void:
-	var hoy := Time.get_date_dict_from_system()
-	var anio := int(hoy["year"])
-	var mes := int(hoy["month"])
-	var dia := int(hoy["day"])
+	var sig := _siguiente()
+	if sig == "":
+		return
 	if has_node("/root/Sesion"):
 		var sesion = get_node("/root/Sesion")
 		sesion.modo = "diario"
-		sesion.fecha_diaria = _fecha(anio, mes, dia)
+		sesion.fecha_diaria = sig
 		sesion.dificultad_nivel = "medio"
-		sesion.semilla_nivel = anio * 10000 + mes * 100 + dia
+		sesion.semilla_nivel = int(sig.replace("-", ""))
 	get_tree().change_scene_to_file("res://src/game/juego.tscn")
 
 func _volver() -> void:
@@ -174,6 +176,11 @@ func _volver() -> void:
 
 func _fecha(anio: int, mes: int, dia: int) -> String:
 	return "%04d-%02d-%02d" % [anio, mes, dia]
+
+func _fecha_corta(fecha: String) -> String:
+	if fecha.length() == 10:
+		return "%d %s" % [int(fecha.substr(8, 2)), MESES_CORTOS[int(fecha.substr(5, 2)) - 1]]
+	return fecha
 
 func _dias_del_mes(anio: int, mes: int) -> int:
 	match mes:

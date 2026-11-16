@@ -91,6 +91,7 @@ func _construir_diario() -> void:
 	margen.add_child(v)
 
 	var fila := HBoxContainer.new()
+	fila.name = "Fila"
 	fila.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	var etq := Label.new()
 	etq.name = "Etiqueta"
@@ -222,18 +223,27 @@ func _formato_tiempo(seg: float) -> String:
 	return "%d min" % mins
 
 func _actualizar_diario() -> void:
-	var fecha := _fecha_hoy()
-	var dia := int(fecha.substr(8, 2))
-	var mes: String = MESES[int(fecha.substr(5, 2)) - 1]
-	$Contenido/ModosCentro/Modos/Diario/Margen/VBox/Dia.text = "%d %s" % [dia, mes]
-	var hechas := 0
+	var sig := ""
 	if has_node("/root/Progreso"):
-		hechas = get_node("/root/Progreso").diario_estrellas(fecha)
-	var estrellas: Label = $Contenido/ModosCentro/Modos/Diario/Margen/VBox/Pie/Estrellas
-	if hechas > 0:
-		estrellas.text = _texto_estrellas(hechas)
+		sig = get_node("/root/Progreso").siguiente_diario()
+	var hoy := _fecha_hoy()
+	var tarjeta := $Contenido/ModosCentro/Modos/Diario
+	var dia_lbl: Label = tarjeta.get_node("Margen/VBox/Dia")
+	var chip: Label = tarjeta.get_node("Margen/VBox/Fila/Hoy")
+	var estrellas: Label = tarjeta.get_node("Margen/VBox/Pie/Estrellas")
+	var ir: Label = tarjeta.get_node("Margen/VBox/Pie/Ir")
+	if sig == "":
+		dia_lbl.text = "Año completo"
+		chip.text = "HECHO"
+		estrellas.text = "Completado"
+		ir.text = "Ver calendario  →"
 	else:
-		estrellas.text = "Sin jugar hoy"
+		var dia := int(sig.substr(8, 2))
+		var mes: String = MESES[int(sig.substr(5, 2)) - 1]
+		dia_lbl.text = "%d %s" % [dia, mes]
+		chip.text = "HOY" if sig == hoy else "SIGUIENTE"
+		estrellas.text = "Pendiente"
+		ir.text = "Jugar  →"
 
 func _texto_estrellas(n: int) -> String:
 	var s := ""

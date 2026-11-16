@@ -640,31 +640,40 @@ func _dar_pista(auto: bool = false) -> void:
 	_sin_mover = 0.0
 	if not auto:
 		_pistas += 1
+	print("[pista] id=", elegida, " auto=", auto)
+	if _label_estado:
+		_label_estado.text = "Pista: sigue la flecha brillante"
 	queue_redraw()
 
 ## Dibuja el resaltado de la pista: cuerpo brillante, anillo y salida punteada.
 func _dibujar_pista(flecha: Flecha) -> void:
 	var fase := Time.get_ticks_msec() / 120.0
-	var al := 0.35 + 0.30 * (0.5 + 0.5 * sin(fase))
-	var col := Color(0.24, 0.86, 0.59, al)
-	var grosor := maxf(3.0, _celda_px * 0.30)
+	var al := 0.45 + 0.35 * (0.5 + 0.5 * sin(fase))
+	var col := Color(0.05, 0.95, 1.0, al)
+	var blanco := Color(1, 1, 1, al * 0.95)
+	var grosor := maxf(4.0, _celda_px * 0.34)
 	var pts := PackedVector2Array()
 	for celda in flecha.celdas:
 		pts.append(_centro_celda(celda))
 	for i in range(pts.size() - 1):
 		draw_line(pts[i], pts[i + 1], col, grosor, true)
+		draw_line(pts[i], pts[i + 1], blanco, maxf(2.0, grosor * 0.24), true)
 	for p in pts:
 		draw_circle(p, grosor * 0.5, col)
+		draw_circle(p, maxf(1.5, grosor * 0.16), blanco)
 	var cabeza := pts[pts.size() - 1]
-	draw_arc(cabeza, _celda_px * 0.46, 0.0, TAU, 32, col,
-			maxf(2.5, _celda_px * 0.08), true)
+	draw_arc(cabeza, _celda_px * 0.52, 0.0, TAU, 32, col,
+			maxf(3.5, _celda_px * 0.10), true)
+	draw_arc(cabeza, _celda_px * 0.40, 0.0, TAU, 32, blanco,
+			maxf(2.0, _celda_px * 0.05), true)
 	if tablero.puede_salir(flecha.id):
 		var paso := flecha.direccion_salida()
 		var celda := flecha.cabeza() + paso
-		var radio := maxf(2.0, _celda_px * 0.07)
-		var col2 := Color(0.24, 0.86, 0.59, al * 0.9)
+		var radio := maxf(2.5, _celda_px * 0.09)
+		var col2 := Color(0.05, 0.95, 1.0, al * 0.95)
 		while tablero.es_jugable(celda):
 			draw_circle(_centro_celda(celda), radio, col2)
+			draw_circle(_centro_celda(celda), maxf(1.2, radio * 0.35), blanco)
 			celda += paso
 
 ## Prepara la animación de una flecha deslizándose fuera del tablero.
@@ -712,6 +721,10 @@ func _process(delta: float) -> void:
 		if _sin_mover >= 10.0:
 			_dar_pista(true)
 			_sin_mover = 0.0
+	if _pista_id >= 0 and Time.get_ticks_msec() >= _pista_hasta:
+		_pista_id = -1
+		if _label_estado and _label_estado.text.begins_with("Pista"):
+			_label_estado.text = ""
 	queue_redraw()
 
 func _evaluar_fin() -> void:
